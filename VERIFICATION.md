@@ -12,7 +12,21 @@ Release preparation checks:
 - `rtk git diff --check`: no whitespace errors.
 - `rtk npm run cf:dry-run`: built 22 allowlisted files and passed for the existing dev environment without runtime bindings.
 
-These are local and packaging results. The deployment/version details below describe the preceding beta release; they do not establish publication or hosted-browser verification of this correction. Saved browser plans and verification artifacts remain excluded from Git and the public build.
+The correction was committed and pushed as `ee1d40234a2ab4c888acb7b735413c4680e70df3` on `main` in the existing private GitHub repository. `rtk npm run cf:deploy:dev` rebuilt the same allowlist and uploaded only the changed `src/high-school.js` asset. The existing Worker `openpath-credit-planner-dev`, environment `dev`, now serves version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`, deployment `b536ff75-74d1-4936-afaf-7cbe1281fb6c`, at 100 percent. Authenticated version/deployment reads confirmed these identifiers.
+
+Hosted verification used the stable beta and the isolated [release version URL](https://6b7fa0ea-openpath-credit-planner-dev.buxtonbycha.workers.dev). The version URL started with an empty plan, so the fictional form tests did not change the existing stable-beta plan or either localhost plan. All 21 served assets matched source and build bytes at both hosted URLs and the restarted local preview. Each origin also passed 21 empty successful HEAD responses and 17 excluded-path 404 checks. Stable beta and local preview matched all seven configured headers. The version URL returned `X-Robots-Tag: noindex` instead of `noindex, nofollow`; its other six headers matched. The strict version-header mismatch remains recorded in `verification/bplus-release-http.json`.
+
+Browser checks on that exact hosted version showed:
+
+- An explicitly recorded, completed three-credit B+ school award counted three earned credits. Selecting the provisional OUSD comprehensive baseline showed 227 remaining.
+- Removing passing and earned confirmations returned the same fictional B+ record to zero earned with both missing-assertion reasons.
+- F and NP remained not earned despite conflicting passing/earned claims. I, W and P remained under review and contributed zero.
+- C- counted the explicit three-credit award. Restoring B+ retained the award.
+- A separate fictional Laney ENGL C1000 B+ college attempt retained grade-policy review for UC Berkeley and Howard and created no high-school allocation.
+- Reload retained both fictional courses, grades, destinations and the 3/230/227 high-school totals. Neither checked hosted tab produced captured application warnings or errors.
+- The stable beta was reopened after deployment and retained its existing fictional general-school plan at 20/240/220. The restarted port 8787 preview retained its prior 23/230/207 plan. The original port 4317 source server and its saved records were not changed by the release.
+
+Browser evidence is in ignored `verification/bplus-release-browser.json` and `verification/bplus-hosted-credit-totals.png`. Saved browser plans and verification artifacts remain excluded from Git and the public build. The form regressions used the separate version origin rather than modifying the existing stable-beta plan; byte parity establishes that both hosted URLs serve the same application. No official school record, award, graduation eligibility or receiving-university decision was verified. The next section records the preceding beta release.
 
 ## Public development beta, October 4, 2026
 
