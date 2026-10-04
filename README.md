@@ -116,7 +116,7 @@ North Carolina A&T equivalents are preliminary, have no stated effective year, a
 
 Howard, Spelman, Tuskegee, and Morehouse have policy guidance but no verified exact Peralta course matches in this dataset. Morehouse's public lookup was blocked before a Peralta search, which is different from finding no matches. Some general transfer policies have unconfirmed first-year applicability.
 
-Final grades are student-entered. A grade does not calculate GPA, authenticate a transcript, establish OUSD approval, or create college credit or GE/major use. F/NP and I/W cannot count as earned high-school credit. P and minus grades retain review of applicable grading and minimum-grade rules. Other letters do not bypass school approval, subject, transcript or award checks. Optional high-school passing-result and GPA records do not establish university conditions.
+Final grades are student-entered. A grade does not calculate GPA, authenticate a transcript, establish OUSD approval, or create college credit or GE/major use. F/NP and I/W cannot count as earned high-school credit. P requires school review. Plus/minus letter grades can count an explicitly recorded passing and earned high-school award, with its recorded provenance and all applicable approval checks. Receiving-university grade and transfer review remains separate. Optional high-school passing-result and GPA records do not establish university conditions.
 
 Courses with unknown local units are excluded from numeric totals and make those totals incomplete. The OUSD snapshot identifies listed offerings, but does not establish current seats, student eligibility, complete degree requirements, applicant fit, or admission eligibility. A planning candidate is not an enrollment-ready recommendation.
 

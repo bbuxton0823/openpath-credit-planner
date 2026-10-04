@@ -1,5 +1,19 @@
 # OpenPath verification
 
+## Plus/minus high-school credit correction, October 4, 2026
+
+Supported plus/minus letter grades now defer to the explicit passing result, earned award, credit quantity and provenance recorded for high-school credit. A fictional completed B+ English record with an explicit three-credit award counts three earned high-school credits. The grade alone creates no award. University grade-policy review is unchanged, as are failure, incomplete, withdrawal, pass-grade, school-approval and duplicate checks.
+
+Release preparation checks:
+
+- `rtk node --test tests/course-record.test.js tests/high-school-export.test.js tests/grade-persistence.test.js`: 27 passed, including the positive award, missing assertions, provenance, linked approval/transcript gates, exports and separate university review.
+- `rtk npm test`: 164 passed, zero failed.
+- `rtk npm run check`: 38 JavaScript files passed syntax checks.
+- `rtk git diff --check`: no whitespace errors.
+- `rtk npm run cf:dry-run`: built 22 allowlisted files and passed for the existing dev environment without runtime bindings.
+
+These are local and packaging results. The deployment/version details below describe the preceding beta release; they do not establish publication or hosted-browser verification of this correction. Saved browser plans and verification artifacts remain excluded from Git and the public build.
+
 ## Public development beta, October 4, 2026
 
 The expanded prototype is deployed at https://openpath-credit-planner-dev.buxtonbycha.workers.dev. It supports students at any high school through a student-recorded total graduation-credit target and manual college courses. OUSD requirements and Peralta transfer research remain limited, dated coverage. No official award, graduation eligibility, admission result or enrollment is claimed.

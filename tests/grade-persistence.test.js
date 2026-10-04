@@ -78,3 +78,16 @@ test('changing school resets prior approval and checklist context without removi
   assert.equal(result.highSchool.allocations[0].note,'Retain evidence');
   assert.deepEqual(state.highSchool.allocations[0].status,'approved');
 });
+
+test('plus/minus university grade review remains separate from recorded high-school awards', () => {
+  for (const finalGrade of ['B+', 'C-']) {
+    for (const [courseId, target, evidenceKind] of [['laney-engl-c1000', 'uc-berkeley', 'published'], ['merritt-math-3a', 'ncat', 'preliminary'], ['laney-engl-c1000', 'howard', 'unknown']]) {
+      const result = compareCourse(courseId, target, { status: 'completed', term: 'Fall 2025', finalGrade });
+      assert.equal(result.kind, 'review');
+      assert.equal(result.evidenceKind, evidenceKind);
+      assert.equal(result.label, `Recorded ${finalGrade}: grade policy review`);
+      assert.equal(result.unitsText, 'Individual credit award not verified');
+      assert.match(result.recordGradeIssue, /receiving school must confirm its grade threshold/);
+    }
+  }
+});

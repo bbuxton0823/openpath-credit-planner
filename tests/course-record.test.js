@@ -54,14 +54,64 @@ test('failed college and high-school grades veto conflicting earned and passing 
   }
 });
 
-test('incomplete, withdrawal, plus/minus and pass grades require review without universal credit assumptions', () => {
-  for (const finalGrade of ['I', 'W', 'P', 'A+', 'A-', 'B+', 'B-', 'C+', 'C-', 'D+', 'D-']) {
+test('incomplete, withdrawal and pass grades require review without universal credit assumptions', () => {
+  for (const finalGrade of ['I', 'W', 'P']) {
     const input = state(entry({ finalGrade }));
     input.highSchool.courses = [hsCourse({ finalGrade })];
     const progress = graduationProgress(input);
     assert.equal(progress.totals.pendingReview, 23, finalGrade);
     assert.equal(progress.totals.verifiedEarned + progress.totals.reportedEarned, 0, finalGrade);
     assert.equal(progress.allocations[0].finalGrade, finalGrade);
+  }
+});
+
+test('a completed B+ English award counts its three recorded school credits without changing the record', () => {
+  for (const profile of [{}, { districtId: 'other', policyId: null, manualCreditTarget: 240 }]) {
+    const input = state(entry(), null, profile);
+    input.highSchool.courses = [hsCourse({ title: 'English', credits: 3, term: 'fall 2025', finalGrade: 'B+' })];
+    const before = structuredClone(input);
+    const progress = graduationProgress(input);
+    assert.equal(progress.courses[0].classification, 'verified-earned');
+    assert.equal(progress.totals.verifiedEarned, 3);
+    assert.equal(progress.totals.pendingReview, 0);
+    assert.equal(progress.totalRequirement.remainingWithReported, profile.districtId === 'other' ? 237 : 227);
+    assert.deepEqual(input, before);
+  }
+});
+
+test('plus/minus school grades still require explicit passing and earned awards with separate provenance', () => {
+  for (const finalGrade of ['B+', 'C-']) {
+    for (const provenance of ['school-verified', 'student-reported']) {
+      const input = state(entry(), null);
+      input.highSchool.courses = [hsCourse({ credits: 3, finalGrade, provenance })];
+      const progress = graduationProgress(input);
+      assert.equal(progress.totals.verifiedEarned, provenance === 'school-verified' ? 3 : 0);
+      assert.equal(progress.totals.reportedEarned, provenance === 'student-reported' ? 3 : 0);
+      for (const change of [{ credits: null }, { result: 'pending' }, { creditAward: 'unconfirmed' }]) {
+        const unconfirmed = structuredClone(input);
+        Object.assign(unconfirmed.highSchool.courses[0], change);
+        const pending = graduationProgress(unconfirmed);
+        assert.equal(pending.courses[0].classification, 'pending-review');
+        assert.equal(pending.totals.verifiedEarned + pending.totals.reportedEarned, 0);
+      }
+      input.highSchool.courses[0].result = 'not-passing';
+      assert.equal(graduationProgress(input).courses[0].classification, 'not-earned');
+    }
+  }
+});
+
+test('plus/minus college-to-school awards retain approval and transcript requirements', () => {
+  for (const finalGrade of ['B+', 'C-']) {
+    const input = state(entry({ finalGrade }));
+    assert.equal(graduationProgress(input).totals.verifiedEarned, 13);
+    assert.equal(courseWorkflow(input, input.entries[0]).steps[3].done, true);
+    for (const change of [{ status: 'pending' }, { schoolApproval: 'unknown' }, { transcript: 'unknown' }]) {
+      const unconfirmed = structuredClone(input);
+      Object.assign(unconfirmed.highSchool.allocations[0], change);
+      assert.equal(graduationProgress(unconfirmed).allocations[0].classification, 'pending-review');
+      assert.equal(graduationProgress(unconfirmed).totals.verifiedEarned, 0);
+      assert.equal(courseWorkflow(unconfirmed, unconfirmed.entries[0]).steps[3].done, false);
+    }
   }
 });
 
@@ -134,8 +184,8 @@ test('course, term and status snapshot changes invalidate every workflow complet
   assert.equal(workflow.steps[3].done, false);
 });
 
-test('recording a failed or conditional final grade completes only the grade-recording step', () => {
-  for (const finalGrade of ['F', 'NP', 'I', 'W', 'P', 'D-']) {
+test('recording a failed, incomplete or unresolved pass grade does not complete credit posting', () => {
+  for (const finalGrade of ['F', 'NP', 'I', 'W', 'P']) {
     const input = state(entry({ finalGrade }));
     const workflow = courseWorkflow(input, input.entries[0]);
     assert.equal(workflow.steps[2].done, true, finalGrade);

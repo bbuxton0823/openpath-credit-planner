@@ -47,7 +47,7 @@ test('failed direct high-school grades export the veto beside the preserved earn
 });
 
 test('unresolved grades and unfinished classes export their actual derived status without awarding credit', () => {
-  for (const finalGrade of ['I', 'W', 'P', 'C-']) {
+  for (const finalGrade of ['I', 'W', 'P']) {
     assert.match(summary(state({ courses: [course({ finalGrade })] })), /Derived credit status: pending-review/);
   }
   for (const status of ['planned', 'in-progress']) {
@@ -58,6 +58,15 @@ test('unresolved grades and unfinished classes export their actual derived statu
   const unknown = summary(state({ courses: [course({ credits: null, creditAward: 'unconfirmed' })] }));
   assert.match(unknown, /unknown HS credits/);
   assert.doesNotMatch(unknown, /null HS credits/);
+});
+
+test('plus/minus grades retain the explicit recorded school award in the review copy', () => {
+  for (const finalGrade of ['B+', 'C-']) {
+    const text = summary(state({ courses: [course({ finalGrade })] }));
+    assert.ok(text.includes(`final grade ${finalGrade} (student-entered)`));
+    assert.match(text, /Derived credit status: verified-earned/);
+    assert.match(text, /HS earned: 10 school-verified as recorded; 0 student-reported/);
+  }
 });
 
 test('allocation export preserves exact course snapshots, grade restrictions and missing-link exclusions', () => {

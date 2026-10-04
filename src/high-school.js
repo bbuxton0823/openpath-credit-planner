@@ -202,7 +202,9 @@ function finalGradeRestriction(value) {
   const classification = classifyFinalGrade(grade);
   if (classification === 'failure') return { classification: 'not-earned', reasons: [`The recorded ${grade} grade does not support earned credit.`] };
   if (classification === 'incomplete') return { classification: 'pending-review', reasons: [`The recorded ${grade} grade does not establish completed, passing coursework. Ask the school to review this award.`] };
-  if (classification === 'conditional' || /[+-]$/.test(grade)) return { classification: 'pending-review', reasons: [`The school must confirm how the recorded ${grade} grade meets its grade and credit rules.`] };
+  // Plus/minus letter grades use the explicit passing and earned award checks below.
+  // Receiving-college grade policy review is handled separately by the transfer rules.
+  if (grade === 'P') return { classification: 'pending-review', reasons: [`The school must confirm how the recorded ${grade} grade meets its grade and credit rules.`] };
   return null;
 }
 function earnedClassification(row, recordStatus, checks = [], ousdScope = false) {
