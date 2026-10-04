@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.openpath-dist-owner
+.wrangler/
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+.DS_Store
+npm-debug.log*
+
+# Local review captures, downloaded plans, and source backups stay on this device.
+verification/
+openpath-plan*.json
+openpath-counselor-review*.txt
+student-plan*.json
+# Never commit local credentials or private keys.
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json

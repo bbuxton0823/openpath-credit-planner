@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "openpath-prototype",
+  "compatibility_date": "2026-10-04",
+  "send_metrics": false,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "none"
+  },
+  "dev": {
+    "ip": "127.0.0.1",
+    "port": 8787,
+    "local_protocol": "http"
+  },
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": false
+  },
+  "dependencies_instrumentation": {
+    "enabled": false
+  },
+  "env": {
+    "dev": {
+      "name": "openpath-credit-planner-dev",
+      "account_id": "968bbe4ecaf64a0b5bede5b53e06aedd",
+      "workers_dev": true,
+      "preview_urls": true,
+      "assets": {
+        "directory": "./dist",
+        "not_found_handling": "none"
+      }
+    }
+  }
+}

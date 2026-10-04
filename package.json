@@ -1,0 +1,22 @@
+{
+  "name": "openpath-local-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Peralta credit planning prototype",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test",
+    "check": "node scripts/check.js",
+    "build": "node scripts/build.js",
+    "preview": "npm run build && WRANGLER_SEND_METRICS=false wrangler dev --env dev --local --ip 127.0.0.1 --port 8787",
+    "cf:dry-run": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --env dev --dry-run --outdir .wrangler/dry-run",
+    "cf:deploy:dev": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --env dev"
+  },
+  "devDependencies": {
+    "wrangler": "4.147.0"
+  }
+}
