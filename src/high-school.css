@@ -30,14 +30,14 @@
 .hs-subject-row { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid #dbe3d4; font-size: 13px; line-height: 1.5; }
 .hs-subject-row dt { flex: 1; }
 .hs-subject-row dd { flex: none; margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
-.hs-subject-row small { display: block; color: var(--hs-muted); font-size: 11px; }
+.hs-subject-row small { display: block; color: var(--hs-muted); font-size: 12px; }
 .hs-facts { font-size: 13px; line-height: 1.65; margin-top: 18px; }
 .hs-facts p { margin-bottom: 9px; }
 .hs-facts ul { padding-left: 20px; margin: 8px 0 15px; }
 .hs-facts li { margin: 5px 0; }
 .hs-source-links { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 .hs-source-links > span { display: block; }
-.hs-source-links small { display: block; color: var(--hs-muted); font-size: 11px; line-height: 1.5; margin: 0 0 8px; }
+.hs-source-links small { display: block; color: var(--hs-muted); font-size: 12px; line-height: 1.5; margin: 0 0 8px; }
 .hs-source-links a { font-size: 12px; min-height: 32px; display: inline-flex; align-items: center; }
 .hs-records { margin: 26px 0; }
 .hs-records-head { margin-bottom: 12px; }
@@ -50,13 +50,13 @@
 .hs-record p { font-size: 13px; line-height: 1.55; color: var(--hs-muted); margin: 0 0 7px; }
 .hs-record-actions { display: flex; flex: none; flex-direction: column; gap: 0; align-items: flex-end; }
 .hs-record-actions .text-button { font-size: 12px; min-height: 44px; }
-.hs-status { display: inline-flex; padding: 4px 8px; border-radius: 5px; font-size: 11px; line-height: 1.5; background: #e8ede3; color: #435840; }
+.hs-status { display: inline-flex; padding: 4px 8px; border-radius: 5px; font-size: 12px; line-height: 1.5; background: #e8ede3; color: #435840; }
 .hs-status.review { background: #f8edda; color: #785526; }
 .grade-alerts { margin-top: 12px; }
 .grade-alert { border: 1px solid #d5b47a; border-left: 4px solid #947025; border-radius: 8px; padding: 12px 14px; margin-top: 9px; background: #fff4dc; color: #624713; }
 .grade-alert.failure { border-color: #c99588; border-left-color: #9b4635; background: #fff0eb; color: #7e3428; }
 .grade-alert.info { border-color: #d2dad0; border-left-color: #768a71; background: #f1f4ef; color: #42553e; }
-.grade-alert-label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+.grade-alert-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
 .hs-record .grade-alert-title, .hs-outcome .grade-alert-title { display: block; color: inherit; font-size: 15px; line-height: 1.4; font-weight: 700; }
 .hs-record .grade-alert p, .hs-outcome .grade-alert p { color: inherit; font-size: 13px; line-height: 1.55; margin: 7px 0 0; }
 .grade-alert a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; color: inherit; text-decoration: underline; }
@@ -93,13 +93,13 @@
   .hs-progress-head p { font-size: 12px; }
   .hs-progress-head .text-button { font-size: 12px; }
   .hs-stats { gap: 10px; }
-  .hs-stats dt { font-size: 11px; }
+  .hs-stats dt { font-size: 12px; }
   .hs-stats dd { font-size: 26px; }
-  .hs-stats small { font-size: 10px; }
+  .hs-stats small { font-size: 12px; }
   .hs-subjects { grid-template-columns: 1fr; }
   .hs-records-head { flex-wrap: wrap; }
   .hs-record { gap: 9px; }
-  .hs-record-actions .text-button { font-size: 11px; }
+  .hs-record-actions .text-button { font-size: 12px; }
   .hs-connected { grid-template-columns: 1fr; }
   .hs-outcome + .hs-outcome { border-left: 0; border-top: 1px solid var(--hs-line); }
   .hs-form .form-row { gap: 12px; }
@@ -110,7 +110,7 @@
 .guide-result-card > .course-workflow { margin-top: 0; padding: 17px 24px 12px; }
 .course-workflow-next { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; }
 .course-workflow-next > div { min-width: 0; }
-.course-workflow-label { color: var(--guide-muted, var(--muted)); font-size: 10px; letter-spacing: 1px; font-weight: 650; margin: 0 0 6px; }
+.course-workflow-label { color: var(--guide-muted, var(--muted)); font-size: 12px; letter-spacing: 1px; font-weight: 650; margin: 0 0 6px; }
 .course-workflow-next h3 { font-size: 15px; line-height: 1.5; margin: 0 0 5px; }
 .course-workflow-next > div > p:last-child { color: var(--guide-muted, var(--muted)); font-size: 12px; line-height: 1.6; margin: 0; }
 .course-workflow-next > button { flex: none; font-size: 12px; min-height: 44px; }
@@ -120,7 +120,7 @@
 .course-workflow-steps li { padding: 0 0 14px 3px; font-size: 13px; line-height: 1.6; }
 .course-workflow-steps li > div { display: flex; gap: 15px; justify-content: space-between; align-items: baseline; }
 .course-workflow-steps p { font-size: 12px; margin: 5px 0 0; color: var(--guide-muted, var(--muted)); }
-.course-workflow-state { flex: none; color: var(--guide-muted, var(--muted)); font-size: 11px; }
+.course-workflow-state { flex: none; color: var(--guide-muted, var(--muted)); font-size: 12px; }
 .course-workflow-note { color: var(--guide-muted, var(--muted)); font-size: 12px; line-height: 1.65; margin: 8px 0 0; }
 .course-workflow-record-links { border-top: 1px solid var(--guide-line, var(--line)); padding-top: 12px; margin-top: 18px; display: flex; flex-direction: column; align-items: flex-start; }
 .course-workflow-record-links .text-button { font-size: 13px; min-height: 44px; text-align: left; }
