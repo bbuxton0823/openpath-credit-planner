@@ -1,8 +1,8 @@
 # Independent audit guide
 
-**Prepared October 4, 2026.** Matriculate, formerly OpenPath, is a student credit-planning prototype. This source handoff is for an independent audit, which has not yet been completed. It is not an official school evaluation or a production-readiness claim.
+**Prepared October 4, 2026.** Matriculate, formerly OpenPath, is a student credit-planning prototype. A local self-review produced the fixes below. An independent external audit has not been completed. This is not an official school evaluation or a production-readiness claim.
 
-The current grade alerts, Matriculate rename and CSS motion treatment were deployed from code commit `2ce8faa5d3a143d656928d44b785751fb3832b27` as Cloudflare version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was preserved. Repository/Worker URLs, storage/schema, package identity, build markers and historical evidence filenames are retained. [VERIFICATION.md](./VERIFICATION.md) records completed hosted checks and distinguishes them from local preparation and prior-release evidence.
+The current audit fixes were deployed from application commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d` as Cloudflare version `83d0b907-6e37-466c-9211-bd3231613cb3` at the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). [PR #1](https://github.com/bbuxton0823/openpath-credit-planner/pull/1) was merged into `main` as merge commit `a062efcf900928d24cb37be73224946a866dfd9e` after the deployment. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public. Repository/Worker URLs, storage/schema, package identity and historical evidence filenames are retained. The build marker now includes generated-directory identity. [VERIFICATION.md](./VERIFICATION.md) separates release checks from local preparation and historical evidence.
 
 ## Reproduce locally
 
@@ -22,7 +22,15 @@ npm start
 
 For Cloudflare's loopback runtime, use `npm run preview` and open `http://127.0.0.1:8787`. **Stop an existing 8787 preview before any build or packaging dry run.** Replacing `dist/` during a running preview previously caused HTTP 500 responses. Restart with `npm run preview`, which builds before starting. Do not stop an unrelated existing 4317 server. `npm run cf:dry-run` checks packaging without publication; it also rebuilds. The audit reproduction commands do not deploy.
 
-## Verification supplied with this handoff
+## Current audit-fix checks
+
+The local Claude workflow passed `npm ci`, 187 automated tests, 40 JavaScript syntax checks, `git diff --check` and a Cloudflare dry run with 22 allowlisted files and zero bindings. Seven new regressions cover plain-D receiving-college review, rounded unit totals, export line-break safety, one course-named counselor button, generated-directory ownership, portable syntax checks and local response headers. Existing GitHub keyring access and Wrangler OAuth completed the workflow without new credentials or account-wide Cloudflare MCP consent.
+
+The remote branch matched the PR application commit. Authenticated Cloudflare readback confirmed deployment `d72138ef-042d-4fc4-ba67-ece377251011` at 100% traffic. Stable-beta and release-URL HTTP checks passed 42 exact-source GET bodies, 42 successful empty HEAD bodies and 36 excluded-path 404s, with an exact 22-file source/build manifest. The stable beta matched seven configured headers; the release URL matched six plus the known robots-header mismatch described below. The release-specific hosted results are in [VERIFICATION.md](./VERIFICATION.md).
+
+A separate documentation-drafting session recorded desktop Chrome checks on an isolated version-origin plan: six school-grade cases, four separate local college units, one named counselor button, read-only keyboard behavior, reload and reduced motion. Actual hosted text/JSON downloads passed readback; a fictional forged newline stayed inside the note rather than becoming a false text-summary line. The final school-credit result was 5/240/235. Stable-beta and localhost plans were untouched. This closeout changed only documentation and did not rerun the 187-test suite. It is not a new phone, cross-browser, screen-reader or independent external audit.
+
+## Historical verification supplied with the earlier handoff
 
 - `rtk npm test`: 180 passed, zero failures or skipped tests, including 16 new grade-alert regressions.
 - `rtk npm run check`: 39 JavaScript files passed syntax checks. This is not type checking.
@@ -30,7 +38,7 @@ For Cloudflare's loopback runtime, use `npm run preview` and open `http://127.0.
 - `rtk npm run cf:dry-run`: passed, 22 allowlisted public files, no bindings and no publication. The restarted local preview is at `http://127.0.0.1:8787`.
 - Source and preview HTTP checks: 21 matching GET bodies, 21 successful empty HEAD bodies and 18 excluded-path 404s per origin. Preview matched all seven configured headers; the Node source server matched its four configured headers. The motion stylesheet and final disk manifest were rechecked after the last rebuild. Audit documentation and exports are not public assets.
 - Actual fictional Matriculate JSON and text downloads passed 14 content assertions. Browser checks covered D awards, missing award confirmation, UC/HBCU/undecided choices, F attempts, read-only questions, Escape/focus return, reload, normal and reduced motion, and phone-width overflow. The original localhost record was inspected without editing it; the existing preview retained 23 recorded credits and 207 remaining.
-- Current hosted release: 63 exact-source GET bodies, 63 successful empty HEAD bodies and 54 excluded-path 404s across stable beta, release URL and preview. Stable/preview matched seven headers; the release URL matched six plus the known robots-header difference described below. The 22-file disk manifest matched the allowlist.
+- That hosted release: 63 exact-source GET bodies, 63 successful empty HEAD bodies and 54 excluded-path 404s across stable beta, release URL and preview. Stable/preview matched seven headers; the release URL matched six plus the known robots-header difference described below. The 22-file disk manifest matched the allowlist.
 - Hosted browser checks retained explicit D and B+ awards totaling 6 credits, preserved a failed 5-credit attempt with zero earned, separated 4 local semester units from school and university evidence, and preserved records on reload. UC/HBCU/undecided warnings, read-only questions, keyboard focus, normal/reduced motion and all three guide stages worked at desktop and phone widths. A read-only stable-beta refresh preserved 20/240/220 high-school totals, 4 quarter units and a 5-credit pending linked allocation. No warnings or errors were captured. Hosted downloads were not repeated; the 14 local assertions apply to unchanged source.
 
 Detailed scope and limitations are in [VERIFICATION.md](./VERIFICATION.md). These are implementation checks and internal reviews, not the requested independent external audit.

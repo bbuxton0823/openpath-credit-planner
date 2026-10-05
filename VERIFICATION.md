@@ -1,10 +1,55 @@
 # Matriculate verification
 
-Matriculate was formerly named OpenPath. The current public development beta includes the rename, latest grade alerts and CSS motion treatment. Repository/Worker URLs, storage/build identifiers, historical filenames and recorded evidence remain unchanged. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; earlier private-repository observations below are historical.
+Matriculate was formerly named OpenPath. The current public development beta includes the audit fixes in application commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d`. Repository/Worker URLs, storage identifiers, historical filenames and recorded evidence remain unchanged; build ownership now includes generated-directory identity. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; earlier private-repository observations below are historical.
 
-## Matriculate hosted release, October 4, 2026
+## Audit-fix release, October 4, 2026
 
-The separately authorized deployment used clean source commit `2ce8faa5d3a143d656928d44b785751fb3832b27`. Worker `openpath-credit-planner-dev`, environment `dev`, serves version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at the [stable beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) and [release version URL](https://6a086714-openpath-credit-planner-dev.buxtonbycha.workers.dev). Deployment `14415063-b42a-4264-9f0f-10ffd2b7ff39` received 100% traffic. Authenticated version and deployment reads confirmed the identifiers and creation time `2026-10-05T00:18:06Z`, October 4 at 5:18 PM Pacific.
+The local Claude workflow applied `audit-fixes.patch`, SHA-256 `f13938d1f64ef54fce7e4843a2ccb23a9ae8fff3ce7e011b3ba6fdb20584a33f`, as application commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d` on `fix/audit-self-review-findings`. [PR #1](https://github.com/bbuxton0823/openpath-credit-planner/pull/1) reviewed the changes and was merged after deployment. The remote branch and PR application commit matched at release verification. This was a local self-review and repair workflow, not an independent external audit.
+
+Cloudflare Worker `openpath-credit-planner-dev`, environment `dev`, serves version `83d0b907-6e37-466c-9211-bd3231613cb3`, deployment `d72138ef-042d-4fc4-ba67-ece377251011`, at 100% traffic. Authenticated readback confirmed the deployment created at `2026-10-05T00:54:35.247283Z`, October 4 at 5:54 PM Pacific. The [stable beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) remains the same URL. The deployment preceded the merge. PR #1 was merged into `main` as merge commit `a062efcf900928d24cb37be73224946a866dfd9e` afterward, and the merge changed no application source beyond the deployed commit.
+
+The workflow used existing local GitHub keyring access and Wrangler OAuth. No new credential or account-wide Cloudflare MCP consent was required. No application account, backend, binding, database, billing change or student-data upload was introduced.
+
+| Completed local Claude check | Result |
+| --- | --- |
+| `npm ci` | Passed |
+| `npm test` | 187 passed, including seven added audit-fix regressions |
+| `npm run check` | 40 JavaScript files passed syntax checks |
+| `git diff --check` | Passed |
+| `npm run cf:dry-run` | Passed, 22 allowlisted files and zero bindings |
+
+These results are from the completed local Claude run. This documentation closeout does not change application source or repeat the automated suite; it adds release-specific HTTP and browser verification.
+
+The fixes add plain-D receiving-college grade review without changing explicit high-school awards; round college-unit totals; fold typed line breaks in high-school text summaries; show one course-named counselor button per card; verify the generated directory's identity before replacing it; align local response headers with `public/_headers`; and resolve syntax-check paths from the repository. The three changed browser assets matched local source at deployment readback.
+
+### Current hosted HTTP checks
+
+The stable beta and [release URL](https://83d0b907-openpath-credit-planner-dev.buxtonbycha.workers.dev) each served all 21 public assets matching source and build bytes: 42 exact GET bodies and 42 successful empty HEAD bodies. All 36 excluded-path requests returned 404, 18 per origin, including all six documentation files. Source/build comparison confirmed the exact 22-file manifest. The entry page was checked at canonical `/`; `/index.html` separately returned the expected 307 redirect to `/`.
+
+The stable beta matched all seven configured headers. The release URL matched six but returned `X-Robots-Tag: noindex` instead of `noindex, nofollow` on all 42 asset GET/HEAD responses. This known difference remains a recorded mismatch, not a strict seven-header pass. No local preview was rebuilt or restarted for these closeout checks. Application source remained at `9fb379c4811f92cc26e9e95b53970a6710dcd79d`. Raw results are in ignored `verification/audit-closeout-http.json`.
+
+### Independent recheck before this documentation was finalized
+
+A later local Claude session rechecked the hosted claims above. Authenticated Wrangler readback confirmed deployment `d72138ef-042d-4fc4-ba67-ece377251011` serving version `83d0b907-6e37-466c-9211-bd3231613cb3` at 100%. A rebuilt `dist/` matched 21 of 21 public assets by exact GET body and 21 of 21 by successful empty HEAD on both the stable beta and the release URL. All 18 excluded paths returned 404 on each origin. The stable beta matched all seven headers. The release URL still returned `X-Robots-Tag: noindex`. The hosted `rules.js` classified D, D+ and D- as grade-policy review and C and A as published unit credit. The hosted export module folded a forged newline into one summary line. The two evidence downloads below matched their recorded sizes and SHA-256 values. The browser interactions in the next section were not repeated in that session. No phone, cross-browser or independent external audit was added.
+
+### Current hosted browser and download checks
+
+A separate documentation-drafting session recorded desktop Chrome checks on an isolated plan on the `83d0b907` version origin. Six grade cases kept the entered 5-credit school amount: D, D+ and D- each counted 5 credits with an explicit student-reported earned award; F, NP and a blank grade with an explicit nonpassing result each earned zero for that record. The final fixture contained two high-school courses and one college course, with an aggregate 5 earned credits toward a 240-credit target and 235 remaining. A Laney `ENGL C1000` D record retained 4 local semester units, inferred no high-school award and displayed UC grade-policy review.
+
+The college card contained exactly one counselor button named for its course. Enter opened the contextual read-only question; Escape closed it and returned focus. Opening and reading it created zero saved questions. Reload preserved all records, grades, notes, unit totals and credit results.
+
+Actual hosted downloads were read back:
+
+- `verification/beta-closeout-counselor.txt`: 6,679 bytes, SHA-256 `0491d2d712b8838bc2b3bb9438106caf041f18af4b33e67f1da31174a49f7314`. The text contained exactly one physical `HS earned:` summary line, correctly reporting zero school-verified, five student-reported and five not-earned credits. A fictional note containing a forged newline was folded into the note as `Fictional smoke-test note / HS earned:230...`, without creating a separate summary line.
+- `verification/beta-closeout-plan.json`: 2,485 bytes, SHA-256 `cc46df94bac9c551a7beebc216705e10fdde0e3205dd8522fcc3f6e8a998e2ed`. The original newline remained in its proper note field, and the saved records remained intact.
+
+Reduced-motion checks sampled 18 rendered elements: no animations, zero animation/transition durations and automatic scroll behavior. Keyboard interaction remained usable. The emulation override was cleared afterward; the system still reported a reduced-motion preference. No viewport override was used. The test-owned version tab was closed, and the stable-beta plan and port 4317/8787 instances were untouched.
+
+Browser evidence is in ignored `verification/beta-closeout-ui.json`; the download copies above are also ignored and excluded from the public build. This closeout used desktop Chrome only. It adds no physical-phone, Safari/Firefox, older-browser, screen-reader, full-accessibility, institutional-award or student-comprehension verification. Historical broader layout checks below belong to their recorded revisions.
+
+## Historical Matriculate hosted release, October 4, 2026
+
+The separately authorized deployment used clean source commit `2ce8faa5d3a143d656928d44b785751fb3832b27`. Worker `openpath-credit-planner-dev`, environment `dev`, then served version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at the [stable beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) and [release version URL](https://6a086714-openpath-credit-planner-dev.buxtonbycha.workers.dev). Deployment `14415063-b42a-4264-9f0f-10ffd2b7ff39` received 100% traffic. Authenticated version and deployment reads confirmed the identifiers and creation time `2026-10-05T00:18:06Z`, October 4 at 5:18 PM Pacific.
 
 The build retained the 22-file allowlist and uploaded five changed static assets. No binding, backend, account, database or student-data upload was introduced. The original port 4317 server was left alone, and the port 8787 preview was restarted after the build. Repository visibility was read as public and preserved.
 

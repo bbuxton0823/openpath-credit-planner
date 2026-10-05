@@ -1,6 +1,6 @@
 # Research ledger for Matriculate
 
-**Date:** October 4, 2026. **Research scope:** Peralta college credit planning for high-school dual-enrollment students pursuing first-year entry, with connected OUSD graduation-credit evidence. Matriculate, formerly OpenPath, is a student-planning prototype with this limited researched coverage. The public development beta now includes the rename, latest grade alerts and CSS motion treatment in version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0`. Deployment and completed hosted checks do not refresh or certify the research below. [VERIFICATION.md](./VERIFICATION.md) records implementation checks separately from academic evidence. Technical identifiers, source URLs and historical evidence filenames are unchanged.
+**Date:** October 4, 2026. **Research scope:** Peralta college credit planning for high-school dual-enrollment students pursuing first-year entry, with connected OUSD graduation-credit evidence. Matriculate, formerly OpenPath, is a student-planning prototype with this limited researched coverage. The public development beta includes the audit fixes in version `83d0b907-6e37-466c-9211-bd3231613cb3`. The fixes and deployment do not refresh or certify the research below. [VERIFICATION.md](./VERIFICATION.md) records implementation checks separately from academic evidence. Technical identifiers, source URLs and historical evidence filenames are unchanged.
 
 ## Provenance and limits
 
