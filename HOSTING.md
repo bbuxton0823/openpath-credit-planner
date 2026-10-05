@@ -1,10 +1,25 @@
 # Cloudflare development beta hosting
 
-Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). It serves audit-fix source commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d` as version `83d0b907-6e37-466c-9211-bd3231613cb3`. Existing repository/Worker URLs, package identity and browser storage are unchanged. The build marker now includes generated-directory identity. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was read without changing it.
+Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The same Worker also serves the custom domain [matriculate.app](https://matriculate.app) and `www.matriculate.app`. It serves source commit `482bdb06db012883c87cb961b3c82ec3f951737d` as version `642d6794-c3e0-4508-92d3-247ec2eb1103`. Existing repository/Worker URLs, package identity and browser storage are unchanged. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was read without changing it.
 
-The static application was updated on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
+The static application was updated on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, or student-data upload was performed. The custom domain was attached outside this repository's `wrangler.jsonc`; the deployments recorded here did not change it. This is a beta, not a production-readiness claim.
 
-## Current audit-fix deployment
+## Current deployment
+
+- Source: merge commit `482bdb06db012883c87cb961b3c82ec3f951737d` on `main`, [PR #4](https://github.com/bbuxton0823/openpath-credit-planner/pull/4) (dark mode toggle) on top of [PR #3](https://github.com/bbuxton0823/openpath-credit-planner/pull/3) (visual polish).
+- Worker/environment: `openpath-credit-planner-dev`, `dev`.
+- Version: `642d6794-c3e0-4508-92d3-247ec2eb1103`.
+- Deployment: `e591272e-da6b-42f8-9888-c426c2c4aa00`, 100% traffic.
+- Created: `2026-10-05T01:38:13.537296Z`, October 4, 2026 at 6:38 PM Pacific.
+- Served at: the stable beta, `matriculate.app` and `www.matriculate.app`.
+
+The merged commit passed 193 tests, 42 JavaScript syntax checks and the dark-theme sync check before deployment. Four changed assets were uploaded from the same 22-file allowlist with no bindings. After deployment, each of the three hostnames served 21 of 21 assets matching the build, 21 successful empty HEAD responses, 9 of 9 excluded-path 404s and all seven configured headers.
+
+## Previous visual-polish deployment
+
+- Source: `c9142be8e62e6cda979473a08a9164e4c1646e0f`, [PR #3](https://github.com/bbuxton0823/openpath-credit-planner/pull/3). Version `bae6cf7e-8e6a-42a2-a478-9c4535e9f810`, deployment `e75ea07c-7df9-4b32-a20a-ffe72ef6a3e3`, created `2026-10-05T01:26:03.898298Z`.
+
+## Previous audit-fix deployment
 
 - Source: `9fb379c4811f92cc26e9e95b53970a6710dcd79d`, branch `fix/audit-self-review-findings`, [PR #1](https://github.com/bbuxton0823/openpath-credit-planner/pull/1).
 - Worker/environment: `openpath-credit-planner-dev`, `dev`.
