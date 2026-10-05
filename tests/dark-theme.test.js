@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { THEMED_FILES, darkColor, stripDarkBlock, withDarkBlock } from '../scripts/dark-theme.js';
+import { THEMED_FILES, darkColor, scopeSelector, stripDarkBlock, withDarkBlock } from '../scripts/dark-theme.js';
 
 const repo = fileURLToPath(new URL('..', import.meta.url));
 const read = file => readFile(path.join(repo, file), 'utf8');
@@ -22,7 +22,8 @@ test('committed stylesheets carry an up-to-date generated dark theme', async () 
   for (const file of THEMED_FILES) {
     const css = await read(file);
     assert.equal(css, withDarkBlock(css), `${file}: run npm run theme:dark`);
-    assert.match(css, /@media screen and \(prefers-color-scheme: dark\)\{/);
+    assert.match(css, /@media screen and \(prefers-color-scheme: dark\)\{\n:root:not\(\[data-theme="light"\]\)/);
+    assert.match(css, /@media screen\{\n:root\[data-theme="dark"\]/);
   }
 });
 
@@ -63,8 +64,18 @@ test('dark surfaces are dark, overlays and shadows stay dark', () => {
 test('every light color declaration is mirrored so the dark cascade matches', () => {
   const css = '.a{color:#263d32;padding:4px}.b{border:0}@media (min-width:600px){.a{background:white}}@media print{.a{color:black}}';
   const block = withDarkBlock(css).slice(css.length);
-  assert.match(block, /\.a\{color: #[0-9a-f]{6}\}/);
-  assert.match(block, /\.b\{border: 0\}/);
-  assert.match(block, /@media \(min-width:600px\)\{\.a\{background: #[0-9a-f]{6}\}\}/);
+  for (const scope of [':root:not([data-theme="light"])', ':root[data-theme="dark"]']) {
+    const at = scope.replace(/[[\]()":]/g, '\\$&');
+    assert.match(block, new RegExp(`${at} \\.a\\{color: #[0-9a-f]{6}\\}`));
+    assert.match(block, new RegExp(`${at} \\.b\\{border: 0\\}`));
+    assert.match(block, new RegExp(`@media \\(min-width:600px\\)\\{${at} \\.a\\{background: #[0-9a-f]{6}\\}\\}`));
+  }
   assert.doesNotMatch(block, /padding|print/);
+});
+
+test('dark rules follow the system unless the student chose light, and always apply when they chose dark', () => {
+  assert.equal(scopeSelector(':root', ':not([data-theme="light"])'), ':root:not([data-theme="light"])');
+  assert.equal(scopeSelector('html', '[data-theme="dark"]'), 'html[data-theme="dark"]');
+  assert.equal(scopeSelector('.a, :is(.b,.c) > p', '[data-theme="dark"]'), ':root[data-theme="dark"] .a,:root[data-theme="dark"] :is(.b,.c) > p');
+  assert.equal(scopeSelector('dialog::backdrop', '[data-theme="dark"]'), ':root[data-theme="dark"] dialog::backdrop');
 });
