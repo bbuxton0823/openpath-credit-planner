@@ -13,7 +13,7 @@ test('loopback server serves the prototype and blocks private files and writes',
     const address = String(data).trim().split(' ').at(-1);
     const response = await fetch(address);
     assert.equal(response.status, 200);
-    assert.match(await response.text(), /OpenPath/);
+    assert.match(await response.text(), /Matriculate/);
     assert.match(response.headers.get('content-security-policy'), /connect-src 'none'/);
     assert.equal((await fetch(`${address}/src/app.js`)).status, 200);
     assert.equal((await fetch(`${address}/package.json`)).status, 404);

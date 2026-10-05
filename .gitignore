@@ -13,6 +13,11 @@ npm-debug.log*
 verification/
 openpath-plan*.json
 openpath-counselor-review*.txt
+openpathrecovery*.txt
+openpath-saved-recovery*.txt
+matriculate-plan*.json
+matriculate-counselor-review*.txt
+matriculate-saved-recovery*.txt
 student-plan*.json
 # Never commit local credentials or private keys.
 *.pem

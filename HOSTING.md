@@ -1,6 +1,8 @@
 # Cloudflare development beta hosting
 
-OpenPath is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The static application was deployed on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
+Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The hosted site still serves the earlier OpenPath release, version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`. The latest grade alerts, rename and CSS motion treatment are local/source changes and have not been deployed. Existing repository/Worker URLs, package identity, browser storage and build markers are unchanged.
+
+The earlier static application was deployed on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
 
 ## Choice and tradeoff
 

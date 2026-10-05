@@ -1,4 +1,44 @@
-# OpenPath verification
+# Matriculate verification
+
+Matriculate was formerly named OpenPath. The rename, latest grade alerts and CSS motion treatment are local/source changes, not a new deployment. The hosted site remains the earlier OpenPath release described below. Repository/Worker URLs, storage/build identifiers, historical filenames and recorded evidence remain unchanged. Prior hosted checks do not verify the newer source changes.
+
+## Matriculate, grade alerts and motion, October 4, 2026
+
+This source handoff adds visible grade guidance without changing academic accounting or receiving-college rules. D-range records retain explicit diploma awards under the existing conditions. UC selections receive a separate A-G grade warning; no selection gets a conditional note, and HBCU-only selections omit it. Missing school confirmation stays separate. F/NP and recorded non-passing attempts retain their entered amount and expose zero earned diploma credit. The alert opens a labeled, read-only counselor question without persistence or transmission.
+
+The Matriculate name appears in both app layouts, browser title, favicon, dialog label and text-review header. Actual downloads use the new `matriculate-` filenames. The existing storage key, version-1 schema, npm package, repository/Worker URLs and build ownership marker are unchanged. Current documentation is renamed; historical evidence and filenames retain their original identities.
+
+### Final automated and HTTP checks
+
+| Check | Result |
+| --- | --- |
+| `rtk npm test` | 180 passed, zero failed or skipped; includes 16 new grade-alert tests |
+| `rtk npm run check` | Syntax checked 39 JavaScript files |
+| `rtk git diff --check` | Passed |
+| `rtk npm run cf:dry-run` | Passed; 22 allowlisted files, no bindings, no publication |
+| Source and preview GET/HEAD | 21 exact-source GET bodies and 21 successful empty HEAD bodies each |
+| Excluded paths | 18 genuine 404s per origin, including `AUDIT.md` |
+| Response headers | All seven preview headers and all four configured Node-source headers matched |
+| Final motion follow-up | Changed `guide.css` matched source/build/both local servers; full 22-file disk manifest matched source; `AUDIT.md` remained excluded |
+| Actual JSON/text downloads | 14 assertions passed for brand, schema, grades, retained amounts, awards, destinations and separate unit totals |
+
+The preview was stopped before packaging, then restarted at `http://127.0.0.1:8787`. Stable hosted `index.html`, `app.js`, `high-school-view.js`, `high-school.css` and `guide.css` still matched the preceding `5ba38dc` source bytes rather than this update. Its title remained OpenPath. No new deployment command was run.
+
+### Browser and rendering checks
+
+Isolated fictional coursework at localhost:4318 covered an explicitly earned D worth 3 high-school credits, a retained 5-credit F attempt earning zero, and a completed D college class with 4 separate local semester units. UC, HBCU-only and undecided selections changed only the relevant warning. Temporarily unconfirming the D award exposed school confirmation and zero earned credit; restoring the recorded award restored its credit. Reload retained grades, amounts and warnings. The original localhost plan was read without editing, including its existing B+ award. The separate 8787 preview retained 23 earned credits, split into 10 school-verified-as-recorded and 13 reported, with 207 remaining.
+
+The reduced-motion run traversed Your classes, Your colleges and next-class exploration, opened a source-qualified class idea and used the counselor dialog. Computed styles showed no heading animation or control transition. The question remained read-only; dialog focus began inside, Tab reached the question with a visible outline, and Escape restored focus to the invoking button. Normal mode exposed 240ms heading and 180ms dialog animations. The close target measured 44 by 44px and backdrop blur was absent.
+
+Default desktop and 390 by 844 phone-size views were checked in Codex's in-app browser. The phone content width was 375px with scrollbar, with no horizontal overflow; the dialog measured 341px. Welcome, grade alerts, input, scrolling and read-only questions remained usable. Both the final fictional test tab and rebuilt preview reported no warning/error console entries. An internal review also inspected the static empty summary and visible keyboard focus in a separate Chrome context; that review did not contain the populated fixture.
+
+The motion layer adds 2,658 CSS bytes and zero JavaScript bytes. Whole-file gzip grows by 703 bytes (4,882 to 5,585), measured with Node defaults. It uses a bounded welcome gradient with one 780ms settling effect, short headings/dialogs and control feedback. No credit value, progress fill, warning or evidence label is animated. There are no new requests, external fonts, libraries, WebGL shaders or ongoing animation loops.
+
+A phone-width normal-motion sample of search, clear, scroll, question opening, Tab and Escape recorded 7 layouts, 35 style recalculations, 2.457ms layout, 4.134ms style, 2.465ms script and 91.731ms aggregate renderer task duration through DevTools counters. This is a desktop-host observation, not an FPS benchmark, individual input latency, or physical low-end-device result. Reduced-motion emulation and viewport overrides were reset after checking.
+
+Local evidence stays ignored: `verification/grade-alerts-http.json`, `verification/matriculate-motion-http.json`, `verification/matriculate-export-checks.json`, `verification/matriculate-motion-weight.json`, `verification/matriculate-motion-renderer.json`, `verification/matriculate-final-tests.log` and Matriculate screenshots. No student exports or browser records are committed or deployed.
+
+Not verified: independent external audit, school certification, production readiness, physical phone performance, older-browser static fallback execution, Safari/Firefox compatibility, screen-reader coverage, complete accessibility, penetration testing or student comprehension. No new navigation runtime was introduced, so motion was checked through existing functional tests and browser behavior rather than tests that mirror CSS declarations. [AUDIT.md](./AUDIT.md) is the handoff for the independent review.
 
 ## Plus/minus high-school credit correction, October 4, 2026
 

@@ -1,12 +1,16 @@
-# OpenPath: student credit-planning prototype
+# Matriculate: student credit-planning prototype
 
-**Working title:** OpenPath, provisional. **Version:** MVP 0.5 general student scope. **Date:** October 4, 2026. **Stage:** public development beta; the any-school and manual-college-course flows are implemented and have passed the documented public browser checks. This is a prototype, not a verified school advising system. **Implementation:** browser-native HTML, CSS, ES modules, a Node.js local server, and Node built-in tests. No browser runtime dependencies or hosted application-data services. Pinned development-only Wrangler supports Cloudflare static hosting.
+**Product:** Matriculate, formerly OpenPath. **Version:** MVP 0.5 general student scope. **Date:** October 4, 2026. **Stage:** development prototype. The latest grade alerts and Matriculate rename are local/source changes and have not been deployed. The hosted beta remains the earlier OpenPath release; its documented checks do not verify these newer changes. **Implementation:** browser-native HTML, CSS, ES modules, a Node.js local server, and Node built-in tests. No browser runtime dependencies or hosted application-data services. Pinned development-only Wrangler supports Cloudflare static hosting.
+
+The brand change preserves existing repository/Worker URLs, npm package identity, `openpath.prototype.v1` storage and schema, build ownership markers, and historical artifact filenames. New download names use the `matriculate-` prefix. No saved-plan migration or deployment is part of the rename. The source also includes a CSS-only motion treatment described below; it is not deployed.
+
+Motion is progressive enhancement: one bounded welcome gradient, finite heading/dialog entrances and tactile controls. Normal preference enables brief motion; reduced-motion preference keeps decorative motion, progress and transitions static. Credit quantities, unknown values, warnings and evidence stay stable. Controls are available immediately, the dialog close target is 44px, and no animation library, external font, background video, WebGL runtime or ongoing JavaScript loop is introduced. The gradient is shader-like CSS styling, not an actual shader renderer. [AUDIT.md](./AUDIT.md) records measured asset weight, browser checks and the unverified physical-device/older-browser limits.
 
 ## 1. Product decision
 
 **Choose your next college course while keeping your future options open.**
 
-OpenPath helps students at any high school organize school and college coursework, separate recorded credit from unresolved decisions, and prepare a next step for counselor review. OUSD graduation rules and Peralta-to-UC/HBCU evidence are the initial researched coverage, not an eligibility boundary for using the planner. Outside that coverage, students can record their own school context and college courses while credit applicability remains explicitly unverified.
+Matriculate helps students at any high school organize school and college coursework, separate recorded credit from unresolved decisions, and prepare a next step for counselor review. OUSD graduation rules and Peralta-to-UC/HBCU evidence are the initial researched coverage, not an eligibility boundary for using the planner. Outside that coverage, students can record their own school context and college courses while credit applicability remains explicitly unverified.
 
 The prototype answers three questions:
 
@@ -344,6 +348,8 @@ Add **Final grade, if available** to the existing college and high-school class 
 
 An entered grade is a student record. It does not calculate GPA, authenticate a transcript, approve OUSD credit, establish college transfer credit, or satisfy GE/major requirements. F and NP cannot contribute earned high-school credit. I and W do not establish earned credit. P requires school review. Plus/minus letter grades can count an explicitly recorded passing and earned high-school award, with its recorded provenance and all applicable approval checks. Receiving-university grade and transfer review remains separate. A passing-looking letter still needs the separate award, school subject and approval conditions.
 
+Completed D+, D and D- records expose UC's C-or-better A-G requirement when UC is selected. With no selected colleges, use a quieter conditional UC note. HBCU-only selections do not receive a UC-specific warning. Keep any explicitly recorded diploma award intact; missing award information gets a separate school-confirmation notice. Completed F/NP or recorded non-passing attempts expose zero earned diploma credit and a retake/credit-recovery next step without deleting the attempt or its entered amount. Alerts stay visible outside the collapsed reason details. A read-only counselor-question dialog provides context without saving or sending. College local units, destination transfer evidence, GPA and graduation eligibility remain independent.
+
 Each saved college course shows one clear next step, an **Update checklist** action, and the optional **See the four checks** detail:
 
 1. **School approval and signatures:** confirm the applicable enrollment route and school requirements. Record whether the required signatures are complete, plus an optional note. The actual signatories must be confirmed with the school; do not invent a universal list.
@@ -369,7 +375,7 @@ Record exact tests and browser observations in [VERIFICATION.md](./VERIFICATION.
 
 ## 19. Any-school profile and manual college courses
 
-**Status:** implemented and checked on the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev), deployment `6a2f7a54-8481-41d2-9ce6-784b59ee285c`. Public browser checks covered general profiles and total targets, manual unit-system separation, unresolved transfer evidence, question persistence, grade guards, OUSD alternatives, school-change resets and narrow-screen forms. Actual JSON and text downloads passed 21 content assertions for the saved general-school record and its evidence boundaries. Exact automated, build, deployment, browser and downloaded-file results belong in [VERIFICATION.md](./VERIFICATION.md).
+**Historical baseline verification:** implemented and checked on the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev), deployment `6a2f7a54-8481-41d2-9ce6-784b59ee285c`, before the latest grade alerts and Matriculate rename. Public browser checks covered general profiles and total targets, manual unit-system separation, unresolved transfer evidence, question persistence, grade guards, OUSD alternatives, school-change resets and narrow-screen forms. Actual JSON and text downloads passed 21 content assertions for the saved general-school record and its evidence boundaries. Exact automated, build, deployment, browser and downloaded-file results belong in [VERIFICATION.md](./VERIFICATION.md).
 
 A student may use the planner without selecting an OUSD school. The general/unknown-school path accepts optional school and district names, graduation cohort, a manual total-credit target, and requirement notes/source link. Label that target as student-entered, not an official requirement; a supplied link is not verified by the app. Compare recorded high-school credit totals with the target only when supplied. Missing target means an unknown remaining total. Do not infer subject distributions, minimum GPA, senior-project requirements, graduation eligibility, or an OUSD conversion from it.
 

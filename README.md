@@ -1,14 +1,16 @@
-# OpenPath development prototype
+# Matriculate development prototype
 
-**OpenPath is a provisional working title.** This student credit-planning prototype supports students at any high school through three stages: **Your classes, Your colleges, Your next class**. OUSD high-school requirements and Peralta-to-UC/HBCU evidence are its limited researched coverage.
+**Matriculate, formerly OpenPath,** is a student credit-planning prototype for students at any high school. It keeps three stages: **Your classes, Your colleges, Your next class**. OUSD high-school requirements and Peralta-to-UC/HBCU evidence are its limited researched coverage.
 
 It is a development prototype, not an official credit evaluation, degree audit, admission assessment, or enrollment service.
 
 The same college course can carry a separate high-school credit record beside its college-credit evidence. A local copy of OUSD's official Fall 2026 list supplies one researched course browser. District schedule flags, high-school awards, local college units, and university degree use remain separate.
 
+The rename preserves repository and Worker URLs, the npm package name `openpath-local-prototype`, browser storage key `openpath.prototype.v1` and its schema, and the build-ownership marker `.openpath-dist-owner` with value `OpenPath generated dist v1`. Historical evidence and export filenames retain their original names. Existing saved plans do not need migration for the brand change.
+
 ## Development beta
 
-The expanded prototype is available at the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). Public browser checks passed for the any-school and manual-college-course flows on October 4, 2026. The [GitHub source repository](https://github.com/bbuxton0823/openpath-credit-planner) is private; the development site is public.
+The [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) still serves the earlier OpenPath release, version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`. The Matriculate rename, latest grade alerts and CSS motion treatment are local/source changes and have not been deployed. The [GitHub source repository](https://github.com/bbuxton0823/openpath-credit-planner) is private; the development site is public. Historical browser results in [VERIFICATION.md](./VERIFICATION.md) do not verify the newer source changes.
 
 Use fictional coursework to try the prototype. From **Tools & details**, choose **Explore a sample**, then explore a college class, a credit explanation, and the four course checks. Or start empty and follow **Your classes → Your colleges → Your next class**. Loading a sample can replace the current local plan, so export anything you want to keep first.
 
@@ -49,9 +51,13 @@ The saved result offers an inline counselor question and a review download. Edit
 
 These are navigation stages, not a readiness score. Class ideas are ordered by documented evidence, not by what is best for a student. Prerequisites, availability, degree use, and final credit still require review. Completed, in-progress, and planned local units remain separate.
 
+A brief welcome light effect, heading/dialog entrances and tactile controls use CSS only. This shader-like styling adds 2,658 CSS bytes and no JavaScript or dependencies. It respects reduced-motion preferences and keeps credit amounts, evidence and warnings still. The static fallback remains usable; measured weight and browser-testing limits are in [AUDIT.md](./AUDIT.md).
+
 **Your high-school credit picture** offers optional school details and a total-credit comparison. A general profile uses only the target you enter; the researched OUSD route can use its applicable baseline. On any saved college class, **Record school credit** connects its high-school amount, subject, and approval record to that existing entry. Add ordinary school classes separately when useful for your credit record. AP/IB class records do not create college awards. Completed status alone does not establish passing or earned credit.
 
 Existing college and high-school add/edit forms include **Final grade, if available**, separate from high-school grade level. Supported student-entered values are A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F, P, NP, I and W, or **Not recorded**. Only completed records may have a final grade. Clear it before changing the class to in-progress or planned. Older records keep a blank grade.
+
+Completed D-range records show a UC A-G preparation warning when UC is selected, or a quieter conditional note when no colleges are selected. An HBCU-only selection omits that UC note. An explicitly recorded diploma award stays separate; an unconfirmed award needs school review. Completed F/NP or recorded non-passing attempts show **0 earned credits**, retain the attempted amount, and suggest retake or credit-recovery review. **Ask your counselor** opens a read-only question to copy. It does not send or save anything.
 
 Saved college cards show the next course action. **See the four checks** expands school approval and required signatures, schedule/enrollment confirmation, final grade, and high-school credit posting. **Update checklist** records approval/signature status, an optional note, and a schedule-confirmation checkbox. The school determines which signatories are required for the route. The app collects no actual signatures, enrolls nobody, and has no school-system connection.
 
@@ -62,6 +68,8 @@ The checklist reads final grade from the existing class and posting from its exa
 **Tools & details** keeps the full class editor, detailed credit matrix, full class-idea planner, review/exports, settings, sample plan, and reset available. These tools share the guide's saved record. The full catalog includes an **Include historical course numbers** option. **See all credit details** expands the full conditions and per-school sources below a summary of at most three plain-language checks. Current-term uncertainty and unknown-school status remain visible. Detected conflicts in saved classes remain visible outside the collapsed details.
 
 In the full review, **Save text** downloads a readable report with source URLs and questions. **Print / PDF** uses the browser's print dialog. **Save JSON** exports the local state for offline backup or manual recovery. General counselor notes and specific course questions are included. No message is sent to a school.
+
+New source-version downloads use `matriculate-plan.json`, `matriculate-counselor-review.txt`, and, when recovering a saved copy, `matriculate-saved-recovery.txt`. Previously downloaded OpenPath files remain unchanged.
 
 The high-school review text includes each record's calculated credit status and exclusion/review reasons. For alternative programs without a reviewed baseline, it explicitly says that no numeric graduation baseline is applied instead of presenting 230 as their requirement.
 
@@ -148,6 +156,8 @@ The optional Jev judgment seam is disabled and contains no network transport or 
 
 ## Check the code
 
+Start an independent review with [AUDIT.md](./AUDIT.md), which records reproduction commands, the source/hosted version boundary, credit and privacy invariants, current checks, and unresolved readiness work.
+
 From the project directory:
 
 ```sh
@@ -199,6 +209,7 @@ Local captures, screenshots, exports and backups under `verification/` are ignor
 | `tests/state.test.js` | Persistence and saved-state regression tests |
 | `tests/high-school.test.js`, `tests/high-school-state.test.js` | HS credit calculations, approval conditions, link snapshots and migration |
 | `tests/high-school-view.test.js` | Connected rendering, source limits, escaping and form contracts |
+| `tests/grade-alerts.test.js` | Grade-warning scope, preserved awards, failure attempts and read-only counselor questions |
 | `tests/schedule.test.js` | District snapshot identities, flags, variable units and catalog persistence |
 | `tests/custom-courses.test.js`, `tests/custom-course-view.test.js` | Manual college identity, forms, persistence and evidence boundaries |
 | `tests/general-high-school.test.js` | General-school targets and isolation from OUSD policy rules |
@@ -208,5 +219,6 @@ Local captures, screenshots, exports and backups under `verification/` are ignor
 | `PRD.md` | Product requirements, acceptance criteria, and phased roadmap |
 | `RESEARCH.md` | Evidence provenance, limitations, and follow-up questions |
 | `VERIFICATION.md` | Recorded implementation verification |
+| `AUDIT.md` | Independent audit handoff and unresolved readiness work |
 
 The next development step is to review actual student comprehension and verify additional applicable evidence, beginning with academic-year coverage and first-year requirement use. See [PRD.md](./PRD.md) for the buildable follow-on scope.

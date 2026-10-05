@@ -52,6 +52,15 @@
 .hs-record-actions .text-button { font-size: 12px; min-height: 44px; }
 .hs-status { display: inline-flex; padding: 4px 8px; border-radius: 5px; font-size: 11px; line-height: 1.5; background: #e8ede3; color: #435840; }
 .hs-status.review { background: #f8edda; color: #785526; }
+.grade-alerts { margin-top: 12px; }
+.grade-alert { border: 1px solid #d5b47a; border-left: 4px solid #947025; border-radius: 8px; padding: 12px 14px; margin-top: 9px; background: #fff4dc; color: #624713; }
+.grade-alert.failure { border-color: #c99588; border-left-color: #9b4635; background: #fff0eb; color: #7e3428; }
+.grade-alert.info { border-color: #d2dad0; border-left-color: #768a71; background: #f1f4ef; color: #42553e; }
+.grade-alert-label { display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+.hs-record .grade-alert-title, .hs-outcome .grade-alert-title { display: block; color: inherit; font-size: 15px; line-height: 1.4; font-weight: 700; }
+.hs-record .grade-alert p, .hs-outcome .grade-alert p { color: inherit; font-size: 13px; line-height: 1.55; margin: 7px 0 0; }
+.grade-alert a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; color: inherit; text-decoration: underline; }
+.grade-review-button { min-height: 44px; white-space: normal; text-align: left; }
 .hs-connected { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 16px 0; border: 1px solid var(--hs-line); border-radius: 11px; background: var(--hs-paper); }
 .hs-outcome { min-width: 0; padding: 15px 17px; }
 .hs-outcome + .hs-outcome { border-left: 1px solid var(--hs-line); }

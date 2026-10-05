@@ -33,6 +33,61 @@ const safeSources = sources => (sources || []).filter(source => /^https:\/\//.te
 const sourceLinks = sources => safeSources(sources).map(source => `<span><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}${source.bodyDate ? ` (${esc(source.bodyDate)})` : ''}</a><small>Checked ${esc(source.checkedDate || 'date not recorded')} · ${source.effectiveYear ? `Effective year ${esc(source.effectiveYear)}` : 'Effective year/cohort not verified'}</small></span>`).join('');
 const reasons = row => row.reasons?.length ? `<details class="hs-row-details"><summary>Why this status?</summary><ul>${row.reasons.map(reason => `<li>${esc(reason)}</li>`).join('')}</ul></details>` : '';
 
+const ucGradeSource = 'https://admission.universityofcalifornia.edu/admission-requirements/first-year-requirements/subject-requirement-a-g.html';
+
+/** Display advice only. Credit totals, saved awards and transfer rules remain independent. */
+export function gradeAlerts(state, record, { college: isCollege = false, award = record } = {}) {
+  if (record.status !== 'completed') return [];
+  const grade = normalizeFinalGrade(record.finalGrade);
+  const alerts = [];
+  const failed = ['F', 'NP'].includes(grade) || award?.result === 'not-passing';
+  if (failed) alerts.push({
+    id: 'no-earned-credit', tone: 'failure', label: 'High-school credit', title: '0 earned credits',
+    text: 'This record adds no earned diploma credit. The entered credit amount stays in your course history.',
+    next: 'Ask your counselor about retaking this class or credit recovery.',
+    question: 'What diploma credit is missing from this attempt, and should I retake the class or use credit recovery?',
+  });
+  if (['D+', 'D', 'D-'].includes(grade)) {
+    const earned = ['verified-earned', 'reported-earned'].includes(award?.classification);
+    if (!failed && !earned) alerts.push({
+      id: 'school-confirmation', tone: 'warning', label: 'High-school credit', title: 'Needs school confirmation',
+      text: 'No earned diploma credit is counted for this record yet. A D grade alone does not establish an award.',
+      next: 'Ask your school to confirm the credit award and any missing requirements.',
+      question: 'Does my school award diploma credit for this grade, and what award or approval information is still missing?',
+    });
+    const targets = (state.profile?.destinationIds || []).map(id => DESTINATIONS.find(item => item.id === id)).filter(Boolean);
+    const selectedUc = targets.some(target => target.type === 'UC');
+    if (selectedUc || !targets.length) alerts.push({
+      id: 'uc-preparation', tone: selectedUc ? 'warning' : 'info', label: selectedUc ? 'UC preparation' : 'College preparation · UC option',
+      title: selectedUc ? "Below UC's minimum grade" : 'College requirements still need review',
+      text: `${selectedUc ? '' : 'If you are considering UC: '}D+, D and D- are below the C-or-better grade requirement for A-G subjects. If this class is intended for A-G, ask a counselor how to meet that requirement.`,
+      next: isCollege ? 'A-G preparation is separate from diploma credit and college transfer credit. Course, subject and unit requirements also need review.' : 'Your recorded diploma award is separate. This app does not verify A-G course approval or admission eligibility.',
+      question: 'If I want to use this class for UC A-G preparation, should I repeat it or can another option meet the subject requirement?',
+      source: ucGradeSource,
+    });
+  }
+  return alerts;
+}
+
+function renderGradeAlerts(alerts, kind, id) {
+  if (!alerts.length) return '';
+  return `<div class="grade-alerts">${alerts.map(alert => `<aside class="grade-alert ${alert.tone}" aria-label="${esc(alert.label)}: ${esc(alert.title)}"><span class="grade-alert-label">${esc(alert.label)}</span><strong class="grade-alert-title">${esc(alert.title)}</strong><p>${esc(alert.text)}</p><p>${esc(alert.next)}</p>${alert.source ? `<a href="${esc(alert.source)}" target="_blank" rel="noopener noreferrer">UC A-G grade requirement</a>` : ''}</aside>`).join('')}${id ? `<button type="button" class="text-button grade-review-button" data-action="grade-review" data-kind="${esc(kind)}" data-id="${esc(id)}" aria-label="Prepare a counselor question about this ${kind === 'college' ? 'college' : 'school'} class">Ask your counselor</button>` : ''}</div>`;
+}
+
+export function gradeReviewContent(state, kind, id) {
+  const progress = graduationProgress(state);
+  const record = kind === 'college' ? state.entries.find(entry => entry.id === id) : progress.courses.find(row => row.id === id);
+  if (!record) return '<p>This class is no longer in your record.</p>';
+  const awards = kind === 'college' ? progress.allocations.filter(row => row.collegeEntryId === id) : [record];
+  const alerts = gradeAlerts(state, record, { college: kind === 'college', award: awards.length === 1 ? awards[0] : null });
+  if (!alerts.length) return '<p>No grade alert currently applies to this record. Your school still confirms credit.</p>';
+  const sourceCourse = kind === 'college' ? resolveEntryCourse(record) : null;
+  const name = sourceCourse ? `${sourceCourse.code} · ${sourceCourse.title} · ${sourceCourse.collegeName || college(sourceCourse.collegeId)?.name || 'College not recorded'}` : record.title;
+  const grade = normalizeFinalGrade(record.finalGrade);
+  const question = `For ${name}${record.term ? ` (${record.term})` : ''}, my recorded ${grade ? `grade is ${grade}` : 'result is non-passing'}.${grade && awards.some(award => award.result === 'not-passing') ? ' The school-credit result is recorded as non-passing.' : ''} ${alerts.map(alert => alert.question).join(' ')}`;
+  return `<div class="hs-form"><p class="dialog-lede">Select and copy this question for a counselor. Nothing is sent or saved.</p><label>Question to take to your counselor<textarea readonly rows="7">${esc(question)}</textarea></label><p class="hs-help">Keep the attempted class in your history. Only record a new award or replacement after your school confirms it.</p>${alerts.some(alert => alert.source) ? `<p><a href="${ucGradeSource}" target="_blank" rel="noopener noreferrer">Read UC's A-G grade requirement</a></p>` : ''}<div class="dialog-actions"><button type="button" class="button secondary" data-action="close">Done</button></div></div>`;
+}
+
 export function renderGraduationProgress(state) {
   const progress = graduationProgress(state);
   const { totals, totalRequirement, profile, policy } = progress;
@@ -82,14 +137,17 @@ export function connectedCredits(state, collegeEntry) {
   if (!sourceCourse) return '';
   const allocations = graduationProgress(state).allocations.filter(row => row.collegeEntryId === collegeEntry.id);
   const allocation = allocations.length === 1 ? allocations[0] : null;
-  const hsAmount = allocation ? allocation.credits == null ? 'School credit amount unknown' : `${num(allocation.credits)} high-school credits` : 'School credit not recorded';
+  const alerts = gradeAlerts(state, collegeEntry, { college: true, award: allocation });
+  const hsAmount = allocation ? allocation.credits == null ? 'School credit amount unknown' : `${num(allocation.credits)} high-school credits recorded` : 'School credit not recorded';
   const hsText = allocation ? `${subject(allocation.subjectId)} · ${classification(allocation.classification)}` : 'A school-approved amount and subject are needed. Local college units do not automatically fill a high-school requirement.';
-  return `<div class="hs-connected" aria-label="Two separate credit outcomes"><section class="hs-outcome"><h3>For high school</h3><strong>${esc(hsAmount)}</strong><p>${esc(hsText)}</p>${allocation ? reasons(allocation) : ''}${collegeEntry.id ? `<button class="text-button" data-action="hs-allocation" data-entry="${esc(collegeEntry.id)}">${allocation ? 'Review school credit' : 'Record school credit'}</button>` : '<p>Save the class to your plan before recording a school credit decision.</p>'}</section><section class="hs-outcome"><h3>For college</h3><strong>${sourceCourse.units == null ? 'Local units unverified' : `${esc(num(sourceCourse.units))} local ${sourceCourse.unitSystem === 'quarter' ? 'quarter units' : sourceCourse.unitSystem === 'semester' || !sourceCourse.custom ? 'semester units' : 'units (system not confirmed)'}`}</strong><p>${esc(status(collegeEntry.status))}${collegeEntry.term ? ` · ${esc(collegeEntry.term)}` : ''} · ${esc(finalGradeLabel(collegeEntry.finalGrade))}. Destination award and degree use remain separate.</p>${collegeEvidence(state, sourceCourse, collegeEntry)}</section></div>`;
+  return `<div class="hs-connected" aria-label="Two separate credit outcomes"><section class="hs-outcome"><h3>For high school</h3><strong>${esc(hsAmount)}</strong><p>${esc(hsText)}</p>${renderGradeAlerts(alerts.filter(alert => alert.id !== 'uc-preparation'), 'college', collegeEntry.id)}${allocation ? reasons(allocation) : ''}${collegeEntry.id ? `<button class="text-button" data-action="hs-allocation" data-entry="${esc(collegeEntry.id)}">${allocation ? 'Review school credit' : 'Record school credit'}</button>` : '<p>Save the class to your plan before recording a school credit decision.</p>'}</section><section class="hs-outcome"><h3>For college</h3><strong>${sourceCourse.units == null ? 'Local units unverified' : `${esc(num(sourceCourse.units))} local ${sourceCourse.unitSystem === 'quarter' ? 'quarter units' : sourceCourse.unitSystem === 'semester' || !sourceCourse.custom ? 'semester units' : 'units (system not confirmed)'}`}</strong><p>${esc(status(collegeEntry.status))}${collegeEntry.term ? ` · ${esc(collegeEntry.term)}` : ''} · ${esc(finalGradeLabel(collegeEntry.finalGrade))}. Destination award and degree use remain separate.</p>${collegeEvidence(state, sourceCourse, collegeEntry)}${renderGradeAlerts(alerts.filter(alert => alert.id === 'uc-preparation'), 'college', collegeEntry.id)}</section></div>`;
 }
 
 export function renderHighSchoolRecords(state) {
   const rows = graduationProgress(state).courses;
-  return `<section class="hs-records"><div class="hs-records-head"><div><h2>Other high-school classes</h2><p>Keep school credits here. Your college classes stay in the college course list.</p></div><button class="button secondary small" data-action="hs-add">Add school class</button></div>${rows.length ? `<details class="hs-details"><summary>${rows.length} school ${rows.length === 1 ? 'class' : 'classes'} recorded</summary>${rows.map(row => `<article class="hs-record"><div class="hs-record-body"><h3>${esc(row.title)}</h3><p>${esc(subject(row.subjectId))} · ${esc(num(row.credits))} high-school credits<br>${esc(status(row.status))}${row.term ? ` · ${esc(row.term)}` : ''}${row.courseType !== 'standard' ? ` · ${esc(row.courseType.toUpperCase())}` : ''}${normalizeFinalGrade(row.finalGrade) ? ` · ${esc(finalGradeLabel(row.finalGrade))}` : ''}</p><span class="hs-status${row.classification === 'verified-earned' ? '' : ' review'}">${esc(classification(row.classification))}</span>${reasons(row)}${row.note ? `<p>${esc(row.note)}</p>` : ''}</div><div class="hs-record-actions"><button class="text-button" data-action="hs-edit" data-id="${esc(row.id)}" aria-label="Edit ${esc(row.title)}">Edit</button><button class="text-button danger" data-action="hs-remove" data-id="${esc(row.id)}" aria-label="Remove ${esc(row.title)}">Remove</button></div></article>`).join('')}<p class="hs-progress-note">AP and IB classes are school records here. Exam scores and college awards are not inferred.</p></details>` : '<div class="hs-empty"><p>No school classes recorded yet. Adding them is optional. Do not enter a college class a second time here; connect its school credit from the existing college class.</p></div>'}</section>`;
+  const alerts = new Map(rows.map(row => [row.id, gradeAlerts(state, row)]));
+  const needsAttention = rows.some(row => alerts.get(row.id).length);
+  return `<section class="hs-records"><div class="hs-records-head"><div><h2>Other high-school classes</h2><p>Keep school credits here. Your college classes stay in the college course list.</p></div><button class="button secondary small" data-action="hs-add">Add school class</button></div>${rows.length ? `<details class="hs-details"${needsAttention ? ' open' : ''}><summary>${rows.length} school ${rows.length === 1 ? 'class' : 'classes'} recorded</summary>${rows.map(row => `<article class="hs-record"><div class="hs-record-body"><h3>${esc(row.title)}</h3><p>${esc(subject(row.subjectId))} · ${esc(num(row.credits))} high-school credits recorded<br>${esc(status(row.status))}${row.term ? ` · ${esc(row.term)}` : ''}${row.courseType !== 'standard' ? ` · ${esc(row.courseType.toUpperCase())}` : ''}${normalizeFinalGrade(row.finalGrade) ? ` · ${esc(finalGradeLabel(row.finalGrade))}` : ''}</p><span class="hs-status${row.classification === 'verified-earned' ? '' : ' review'}">${esc(classification(row.classification))}</span>${renderGradeAlerts(alerts.get(row.id), 'school', row.id)}${reasons(row)}${row.note ? `<p>${esc(row.note)}</p>` : ''}</div><div class="hs-record-actions"><button class="text-button" data-action="hs-edit" data-id="${esc(row.id)}" aria-label="Edit ${esc(row.title)}">Edit</button><button class="text-button danger" data-action="hs-remove" data-id="${esc(row.id)}" aria-label="Remove ${esc(row.title)}">Remove</button></div></article>`).join('')}<p class="hs-progress-note">AP and IB classes are school records here. Exam scores and college awards are not inferred.</p></details>` : '<div class="hs-empty"><p>No school classes recorded yet. Adding them is optional. Do not enter a college class a second time here; connect its school credit from the existing college class.</p></div>'}</section>`;
 }
 
 export function highSchoolProfileForm(state) {

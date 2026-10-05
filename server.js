@@ -37,5 +37,5 @@ const server = http.createServer(async (req, res) => {
     res.end(req.method === 'HEAD' ? undefined : body);
   } catch { res.writeHead(404).end('Not found'); }
 });
-server.listen(port, '127.0.0.1', () => console.log(`OpenPath local prototype: http://localhost:${server.address().port}`));
+server.listen(port, '127.0.0.1', () => console.log(`Matriculate local prototype: http://localhost:${server.address().port}`));
 server.on('error', error => { console.error(error.message); process.exitCode = 1; });

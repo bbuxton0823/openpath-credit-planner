@@ -4,7 +4,7 @@ import { loadState, saveState, emptyState, makeDemo, STORAGE_KEY, updateCollegeE
 import { deriveJourney, evidenceKey, createAdvisorQuestion } from './journey.js';
 import { guidedCandidates, briefEvidence, studentChecks } from './guide.js';
 import { normalizeHighSchoolRecords, normalizeHighSchoolAllocations, graduationProgress } from './high-school.js';
-import { renderGraduationProgress, connectedCredits, renderHighSchoolRecords, highSchoolProfileForm, highSchoolCourseForm, highSchoolAllocationForm } from './high-school-view.js';
+import { renderGraduationProgress, connectedCredits, renderHighSchoolRecords, highSchoolProfileForm, highSchoolCourseForm, highSchoolAllocationForm, gradeReviewContent } from './high-school-view.js';
 import { scheduleCourseId } from './catalog.js';
 import { OUSD_SCHEDULE, OUSD_SCHEDULE_ROWS } from './ousd-schedule.js';
 import { FINAL_GRADES, normalizeCourseWorkflow, courseWorkflow } from './course-record.js';
@@ -86,7 +86,7 @@ function render() {
   if (page === 'home') { renderGuide(); return; }
   const journeyMode = state.viewMode === 'journey';
   $('#app').innerHTML = `<aside class="sidebar">
-    <a class="brand" href="#home" aria-label="OpenPath overview"><span class="brand-symbol">o<span>p</span></span><span>openpath<span class="brand-sub">A LITTLE MORE POSSIBILITY.</span></span></a>
+    <a class="brand" href="#home" aria-label="Matriculate overview"><span class="brand-symbol" aria-hidden="true">M</span><span>Matriculate<span class="brand-sub">A LITTLE MORE POSSIBILITY.</span></span></a>
     <div class="prototype-tag">Prototype <span>·</span> Working title</div>
     <nav aria-label="Main navigation">${nav.map(([id, label]) => `<a href="#${id}" class="nav-link ${page === id ? 'active' : ''}" ${page === id ? 'aria-current="page"' : ''}>${icon(id)}<span>${label}</span>${id === 'courses' && state.entries.length ? `<span class="nav-count">${state.entries.length}</span>` : ''}</a>`).join('')}</nav>
     <div class="sidebar-bottom"><div class="local-dot"></div><strong>Just on this device</strong><p>No account. Your plan stays in this browser.</p><button data-action="setup" class="text-button">${state.setupComplete ? 'Edit my setup' : 'Set up my path'} ${icon('arrow')}</button></div>
@@ -106,11 +106,11 @@ function guideGo(step) {
 }
 function renderGuide() {
   const stages = [['classes', 'Your classes'], ['colleges', 'Your colleges'], ['next', 'Your next class']];
-  $('#app').innerHTML = `<div class="guide-shell"><header class="guide-header"><a class="brand" href="#home" aria-label="OpenPath home"><span class="brand-symbol">o<span>p</span></span><span>openpath<span class="brand-sub">ONE CLASS. A CLEARER NEXT STEP.</span></span></a><details class="guide-tools-menu"><summary>Tools & details</summary><div><a href="#courses">All classes & editing</a><a href="#compare">Detailed credit comparison</a><a href="#plan">All class ideas</a><a href="#summary">Review & export</a><button data-action="setup">Full settings</button><button data-action="demo">Explore a sample</button><button data-action="clear">Clear this local plan</button></div></details></header><main id="main" class="guide-main">
+  $('#app').innerHTML = `<div class="guide-shell"><header class="guide-header"><a class="brand" href="#home" aria-label="Matriculate home"><span class="brand-symbol" aria-hidden="true">M</span><span>Matriculate<span class="brand-sub">ONE CLASS. A CLEARER NEXT STEP.</span></span></a><details class="guide-tools-menu"><summary>Tools & details</summary><div><a href="#courses">All classes & editing</a><a href="#compare">Detailed credit comparison</a><a href="#plan">All class ideas</a><a href="#summary">Review & export</a><button data-action="setup">Full settings</button><button data-action="demo">Explore a sample</button><button data-action="clear">Clear this local plan</button></div></details></header><main id="main" class="guide-main">
   ${storageWarning ? `<div class="notice warning" role="alert">${esc(storageWarning)} <button data-action="download-json">Export current plan</button>${loaded.warning ? '<button data-action="recover">Recover original saved copy</button>' : ''}<button data-action="restart-storage">Start fresh</button></div>` : ''}
   ${state.isDemo ? '<p class="guide-note">Sample plan · Fictional classes, just for exploring.</p>' : ''}
   ${state.guide.started ? `<nav class="guide-progress" aria-label="Planning steps"><ol>${stages.map(([id, label], i) => `<li><button data-action="guide-step" data-step="${id}" ${state.guide.step === id ? 'aria-current="step"' : ''}><span class="guide-step-number">${i + 1}</span><span class="guide-step-label">${label}</span></button></li>`).join('')}</ol></nav>${({ classes: guideClasses, colleges: guideColleges, next: guideNext }[state.guide.step])()}` : `<section class="guide-welcome"><p class="eyebrow">FOR STUDENTS AT ANY HIGH SCHOOL</p><h1 id="page-title" tabindex="-1">One class.<br>A clearer next step.</h1><p>Track your high-school and college classes. Add your school’s credit requirements. Make a plan for what comes next.</p><button class="button primary" data-action="guide-start">Find my next class ${icon('arrow')}</button><p class="guide-promise">No account. No major required.<br>Your plan stays in this browser.<br>OUSD requirements and Peralta transfer research available.</p></section>`}
-  </main><footer class="guide-footer"><span>OpenPath is a prototype. Your school confirms credit and class requirements.</span><span>Research checked Oct 4, 2026.</span></footer></div>`;
+  </main><footer class="guide-footer"><span>Matriculate is a prototype. Your school confirms credit and class requirements.</span><span>Research checked Oct 4, 2026.</span></footer></div>`;
 }
 function guideHeading(title, description) {
   return `<div class="guide-heading"><h1 id="page-title" tabindex="-1">${title}</h1><p>${description}</p></div>`;
@@ -344,7 +344,7 @@ function summaryPage() {
 function openDialog(title, content, wide = false) {
   const root = $('#dialog-root');
   if (!root.querySelector('dialog[open]')) dialogReturnTarget = document.activeElement;
-  root.innerHTML = `<dialog class="${wide ? 'wide-dialog' : ''}" aria-labelledby="dialog-title"><div class="dialog-head"><div><p class="eyebrow">YOUR OPENPATH</p><h2 id="dialog-title">${title}</h2></div><button class="close-button" data-action="close" aria-label="Close dialog">×</button></div><div class="dialog-body">${content}</div></dialog>`;
+  root.innerHTML = `<dialog class="${wide ? 'wide-dialog' : ''}" aria-labelledby="dialog-title"><div class="dialog-head"><div><p class="eyebrow">YOUR MATRICULATE</p><h2 id="dialog-title">${title}</h2></div><button class="close-button" data-action="close" aria-label="Close dialog">×</button></div><div class="dialog-body">${content}</div></dialog>`;
   const dialog = root.querySelector('dialog');
   dialog.addEventListener('close', () => {
     if (!root.querySelector('dialog[open]')) {
@@ -401,7 +401,7 @@ function download(filename, text, type = 'text/plain') {
 }
 function summaryText() {
   const t = totals(state.entries);
-  const lines = ['OPENPATH: COUNSELOR REVIEW COPY', 'Prototype. Working title. Research snapshot: October 4, 2026.', `Review copy generated ${generatedLabel()}.`, state.isDemo ? 'SAMPLE DATA: fictional student course history.' : 'Student-reported local record.', `First-year high-school dual enrollment. Graduation: ${recordedGraduationYear() || 'not provided'}. Major: ${state.profile.major}.`, `Planning term: ${state.profile.planningTerm}.`, `Local semester units: ${t.completed} completed; ${t.inProgress} in progress; ${t.planned} planned. Not destination awards.`, 'Local-unit totals describe recorded course attempts and course load, including failed attempts. They are not earned university credit. Final grades are student-entered; eligibility, prerequisites and availability need review.', `Destinations: ${selectedTargets().map(d => d.name).join(', ') || 'None selected'}`, '', 'COURSES AND EVIDENCE'];
+  const lines = ['MATRICULATE: COUNSELOR REVIEW COPY', 'Prototype. Working title. Research snapshot: October 4, 2026.', `Review copy generated ${generatedLabel()}.`, state.isDemo ? 'SAMPLE DATA: fictional student course history.' : 'Student-reported local record.', `First-year high-school dual enrollment. Graduation: ${recordedGraduationYear() || 'not provided'}. Major: ${state.profile.major}.`, `Planning term: ${state.profile.planningTerm}.`, `Local semester units: ${t.completed} completed; ${t.inProgress} in progress; ${t.planned} planned. Not destination awards.`, 'Local-unit totals describe recorded course attempts and course load, including failed attempts. They are not earned university credit. Final grades are student-entered; eligibility, prerequisites and availability need review.', `Destinations: ${selectedTargets().map(d => d.name).join(', ') || 'None selected'}`, '', 'COURSES AND EVIDENCE'];
   if (t.quarterByStatus) lines.push(`Quarter units (separate course load): ${t.quarterByStatus.completed} completed; ${t.quarterByStatus.inProgress} in progress; ${t.quarterByStatus.planned} planned.`);
   if (t.unclassifiedByStatus) lines.push(`Course records with unknown unit system, excluded from numeric unit totals: ${Object.values(t.unclassifiedByStatus).reduce((sum,value)=>sum+value,0)}.`);
   for (const e of state.entries) {
@@ -439,6 +439,7 @@ document.addEventListener('click', event => {
   if (action === 'custom-add') { openDialog('Add another college class', customCourseForm(state, undefined, button.dataset.planning === 'true')); return; }
   if (action === 'course-workflow') { openDialog('Your course checklist', courseWorkflowForm(state, entry)); return; }
   if (action === 'hs-profile') { openDialog('Your high-school requirements', highSchoolProfileForm(state)); return; }
+  if (action === 'grade-review') { openDialog('A question for your counselor', gradeReviewContent(state, button.dataset.kind, id)); return; }
   if (action === 'hs-add' || action === 'hs-edit') { openDialog(action === 'hs-edit' ? 'Edit high-school class' : 'Add a high-school class', highSchoolCourseForm(state, id)); return; }
   if (action === 'hs-allocation') { openDialog('Connect high-school credit', highSchoolAllocationForm(state, entry)); return; }
   if (action === 'hs-remove' || action === 'hs-allocation-remove') {
@@ -490,9 +491,9 @@ document.addEventListener('click', event => {
   else if (action === 'demo') { if (state.entries.length || state.setupComplete || state.guide.started || state.guide.note || state.profile.destinationIds.length || state.profile.collegeIds.length || state.highSchool.courses.length || state.highSchool.allocations.length || state.highSchool.profile.districtId) confirmDialog('demo'); else { state = makeDemo(); persist(); render(); announce('Sample journey loaded. All student records are fictional.'); } }
   else if (action === 'confirm-demo' || action === 'confirm-clear') { closeDialog(); state = action === 'confirm-demo' ? makeDemo() : emptyState(); persist(); go('home'); announce(action === 'confirm-demo' ? 'Sample journey loaded.' : 'Local plan cleared. Your own path starts here.'); }
   else if (action === 'confirm-remove') { state.entries = state.entries.filter(e => e.id !== id); state.highSchool.allocations = state.highSchool.allocations.filter(a => a.collegeEntryId !== id); closeDialog(); persist(); render(); announce('Course removed from this browser’s plan.'); }
-  else if (action === 'download-json') download('openpath-plan.json', JSON.stringify({ ...state, exportedAtUTC: new Date().toISOString(), researchSnapshot: '2026-10-04', notice: 'Prototype student-reported record. No destination awards.' }, null, 2), 'application/json');
-  else if (action === 'download-summary') download('openpath-counselor-review.txt', summaryText());
-  else if (action === 'recover') { let raw; try { raw = localStorage.getItem(STORAGE_KEY); } catch { announce('Browser storage is unavailable.'); return; } download('openpath-saved-recovery.txt', raw || 'No saved data found.'); }
+  else if (action === 'download-json') download('matriculate-plan.json', JSON.stringify({ ...state, exportedAtUTC: new Date().toISOString(), researchSnapshot: '2026-10-04', notice: 'Prototype student-reported record. No destination awards.' }, null, 2), 'application/json');
+  else if (action === 'download-summary') download('matriculate-counselor-review.txt', summaryText());
+  else if (action === 'recover') { let raw; try { raw = localStorage.getItem(STORAGE_KEY); } catch { announce('Browser storage is unavailable.'); return; } download('matriculate-saved-recovery.txt', raw || 'No saved data found.'); }
   else if (action === 'restart-storage') openDialog('Replace unreadable local data?', '<p>Export the saved copy first if you need to recover it. Starting fresh replaces only this prototype’s saved plan.</p><div class="dialog-actions"><button class="button secondary" data-action="close">Cancel</button><button class="button primary" data-action="confirm-restart-storage">Start fresh</button></div>');
   else if (action === 'confirm-restart-storage') { loaded.warning = ''; state = emptyState(); persist(); closeDialog(); go('home'); }
   else if (action === 'print') { document.querySelectorAll('#main details:not(.guide-tools-menu)').forEach(d => { d.open = true; }); window.print(); }
