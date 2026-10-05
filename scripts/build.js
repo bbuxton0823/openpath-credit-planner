@@ -32,6 +32,8 @@ export const PUBLIC_ASSETS = Object.freeze([
   ['public/_headers', '_headers'],
 ]);
 
+const dirIdentity = info => `${info.dev}:${info.ino}:${Math.round(info.birthtimeMs)}\n`;
+
 async function statIfPresent(file) {
   try { return await lstat(file); }
   catch (error) { if (error.code === 'ENOENT') return null; throw error; }
@@ -62,15 +64,22 @@ export async function build(root = projectRoot) {
     throw new Error('Refusing non-directory or symlink dist');
   }
   if (ownerInfo && (!ownerInfo.isFile() || ownerInfo.isSymbolicLink())) throw new Error('Invalid dist ownership marker');
-  const owned = ownerInfo && (await readFile(ownerFile, 'utf8')) === ownerValue;
-  if (outputInfo && !owned) throw new Error('Refusing to replace an unowned dist directory');
-  if (ownerInfo && !owned) throw new Error('Unknown dist ownership marker');
+  // The marker names the exact dist directory this script created. A dist someone
+  // recreated by hand (new identity) is not ours, even if an old marker survived.
+  const marker = ownerInfo ? await readFile(ownerFile, 'utf8') : null;
+  const knownMarker = marker != null && (marker === ownerValue || marker.startsWith(ownerValue));
+  if (ownerInfo && !knownMarker) throw new Error('Unknown dist ownership marker');
+  if (outputInfo) {
+    if (!knownMarker) throw new Error('Refusing to replace an unowned dist directory');
+    if (marker === ownerValue) throw new Error('Refusing to replace dist: legacy ownership marker cannot prove dist was generated. Remove dist/ and rebuild.');
+    if (marker !== ownerValue + dirIdentity(outputInfo)) throw new Error('Refusing to replace an unowned dist directory (it was recreated after the last build)');
+  }
 
   // Validate and read every source before replacing any generated files.
   const content = await Promise.all(PUBLIC_ASSETS.map(async ([source, target]) => [target, await safeSource(root, source)]));
   if (outputInfo) await rm(output, { recursive: true });
-  await writeFile(ownerFile, ownerValue);
   await mkdir(output);
+  await writeFile(ownerFile, ownerValue + dirIdentity(await lstat(output)));
   for (const [relative, body] of content) {
     const destination = path.join(output, relative);
     await mkdir(path.dirname(destination), { recursive: true });

@@ -47,5 +47,7 @@ export function highSchoolSummaryLines(state) {
     seen.add(source.url);
     lines.push(`Source: ${source.title}. Checked ${source.checkedDate}.${source.bodyDate ? ` Source body date: ${source.bodyDate}.` : ''} Effective academic year not verified. ${source.url}`);
   }
-  return lines;
+  // Notes and titles come from multi-line inputs. Fold them so a typed line can never
+  // pose as a separate summary line (for example a second "HS earned:" total).
+  return lines.map(line => String(line).replace(/\s*[\r\n\u2028\u2029]+\s*/g, ' / '));
 }
