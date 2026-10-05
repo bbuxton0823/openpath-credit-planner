@@ -89,7 +89,9 @@ export function compareCourse(courseOrId, destinationOrId, entry = {}) {
   if (courseOrId?.courseId && !Object.keys(entry).length) entry = courseOrId;
   const result = compareCourseEvidence(courseOrId, destinationOrId, entry);
   const grade = normalizeFinalGrade(entry.finalGrade);
-  const classification = classifyFinalGrade(grade);
+  // A plain D is a high-school letter pass, but it sits below the C threshold many
+  // receiving colleges use, so it gets the same policy review as D+ and D-.
+  const classification = grade === 'D' ? 'conditional' : classifyFinalGrade(grade);
   if (!['failure', 'incomplete', 'conditional'].includes(classification)) return result;
   const recordGradeIssue = classification === 'failure'
     ? `Recorded final grade ${grade}: this failed attempt is not earned credit. Ask the receiving school to review its policy.`
@@ -123,6 +125,12 @@ export function totals(entries = []) {
     }
     if (Number.isFinite(course.units)) result[key] += course.units;
     else result.unknownByStatus[key] += 1;
+  }
+  // Custom units can be decimals; keep binary float noise (0.1 + 0.2) out of the UI and exports.
+  const round = value => Math.round(value * 100) / 100;
+  for (const key of ['completed', 'inProgress', 'planned']) {
+    result[key] = round(result[key]);
+    if (result.quarterByStatus) result.quarterByStatus[key] = round(result.quarterByStatus[key]);
   }
   return result;
 }
