@@ -1,10 +1,25 @@
 # Cloudflare development beta hosting
 
-Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). It serves source commit `2ce8faa5d3a143d656928d44b785751fb3832b27`, including the latest grade alerts, rename and CSS motion treatment, as version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0`. Existing repository/Worker URLs, package identity, browser storage and build markers are unchanged. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was read without changing it.
+Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). It serves audit-fix source commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d` as version `83d0b907-6e37-466c-9211-bd3231613cb3`. Existing repository/Worker URLs, package identity and browser storage are unchanged. The build marker now includes generated-directory identity. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was read without changing it.
 
 The static application was updated on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
 
-## Current Matriculate deployment
+## Current audit-fix deployment
+
+- Source: `9fb379c4811f92cc26e9e95b53970a6710dcd79d`, branch `fix/audit-self-review-findings`, [PR #1](https://github.com/bbuxton0823/openpath-credit-planner/pull/1).
+- Worker/environment: `openpath-credit-planner-dev`, `dev`.
+- Version: `83d0b907-6e37-466c-9211-bd3231613cb3`.
+- Release URL: [83d0b907-openpath-credit-planner-dev.buxtonbycha.workers.dev](https://83d0b907-openpath-credit-planner-dev.buxtonbycha.workers.dev).
+- Deployment: `d72138ef-042d-4fc4-ba67-ece377251011`, 100% traffic.
+- Created: `2026-10-05T00:54:35.247283Z`, October 4, 2026 at 5:54 PM Pacific.
+
+The local Claude workflow used the existing macOS GitHub keyring and Wrangler OAuth session. No new credential or account-wide Cloudflare MCP consent was needed. It passed dependency installation, 187 tests, 40 JavaScript syntax checks, diff checking and a 22-file dry run with zero bindings. The remote branch matched the PR's application commit, and authenticated Cloudflare readback confirmed this deployment. Three changed browser assets matched local source. [VERIFICATION.md](./VERIFICATION.md) records the subsequent hosted checks separately. Deployment did not merge the PR or change the application-data architecture.
+
+Closeout HTTP checks on the stable beta and release URL passed 42 exact-source GET bodies, 42 successful empty HEAD bodies and 36 excluded-path 404s. The exact 22-file source/build manifest matched. Stable-beta responses matched seven configured headers. The release URL matched six headers, with the known `X-Robots-Tag: noindex` versus `noindex, nofollow` mismatch. Canonical `/` served the app; `/index.html` redirected there with 307. No preview rebuild or restart was performed. Results are in ignored `verification/audit-closeout-http.json`.
+
+A separate documentation-drafting session recorded desktop Chrome checks on the isolated version origin that passed six grade cases, separate local college units, a single course-named counselor action, read-only keyboard interaction, reload and reduced motion. Actual hosted text and JSON downloads were read back: the text retained one correct earned-credit summary line while folding a fictional forged newline into its note; JSON retained that newline inside the note field. The stable-beta plan and both localhost instances were untouched. [VERIFICATION.md](./VERIFICATION.md) records file hashes, exact results and browser limitations. This documentation closeout changed no application source and did not repeat Claude's 187-test run.
+
+## Historical Matriculate deployment
 
 - Source: clean commit `2ce8faa5d3a143d656928d44b785751fb3832b27`.
 - Worker/environment: `openpath-credit-planner-dev`, `dev`.
@@ -76,7 +91,7 @@ public/_headers -> _headers
 
 These are 22 files: the HTML entry, 20 browser source/style files, and the header configuration. The HTML loads `guide.css` and `high-school.css` after the base styles. The local Node server uses an explicit public URL set that includes the same browser assets. The district schedule, 17-school roster, and school-policy modules contain curated public evidence. Saved student grades, checklist entries, general school profiles and manual targets, custom college classes, school records, and college-credit connections remain in browser storage. The custom-course modules are application code; entered custom classes are not written into the public catalog or build. The build never copies an entire source or project directory. Research documents, screenshots, verification exports, tests, package files, `.env` files, and user plans are absent from `dist/`. Symlinked source files, source directories, output directories, and ownership markers are rejected. Missing or invalid source files fail before an existing output is replaced.
 
-`dist/` is generated and disposable. The first successful build writes `.openpath-dist-owner` beside it. Later builds clear only the marked `dist/` directory, including stale files accidentally added there. An unmarked existing `dist/` is preserved and the build stops. Do not store personal files in generated output. The marker is outside the public directory.
+`dist/` is generated and disposable. The first successful build writes `.openpath-dist-owner` beside it, including the generated directory's identity. Later builds clear only that same generated directory, including stale files accidentally added there. An unmarked or manually recreated `dist/` is preserved and the build stops. A legacy marker without directory identity also stops the build when `dist/` exists; inspect and preserve any needed contents before removing old generated output and rebuilding. Do not store personal files in generated output. The marker is outside the public directory.
 
 The `_headers` policy retains same-origin scripts and styles, blocks app network connections and form submissions, blocks embedding, prevents content-type sniffing, and suppresses referrers. `Cache-Control: no-store` keeps prototype asset changes easy to inspect. `X-Robots-Tag: noindex, nofollow` is a crawler preference, not access control. The beta URL and its version URL serve these public assets to anyone who can reach them. No access-control service was added.
 
