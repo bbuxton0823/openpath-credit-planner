@@ -30,12 +30,28 @@ const icons = {
   check: '<path d="m5 12 4 4L19 6"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/>',
   out: '<path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
 };
 const icon = (key, cls = '') => `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[key] || icons.info}</svg>`;
 const nav = [['home', 'Overview'], ['courses', 'My courses'], ['destinations', 'Destinations'], ['compare', 'Compare credit'], ['plan', 'Next semester']];
 let loaded;
 try { loaded = loadState(localStorage); } catch { loaded = { state: emptyState(), warning: 'Browser storage is unavailable. Changes will last only for this visit. Export a copy before closing.' }; }
 let state = loaded.state;
+
+// Color theme: the system setting applies until the student picks one. The choice is a separate
+// browser preference, so it never touches the saved plan or its exports.
+const THEME_KEY = 'matriculate.theme';
+const systemDark = matchMedia('(prefers-color-scheme: dark)');
+const currentTheme = () => document.documentElement.dataset.theme || (systemDark.matches ? 'dark' : 'light');
+function savedTheme() {
+  try { const value = localStorage.getItem(THEME_KEY); return value === 'dark' || value === 'light' ? value : ''; } catch { return ''; }
+}
+function syncThemeToggles() {
+  for (const toggle of document.querySelectorAll('[data-action="theme-toggle"]')) toggle.setAttribute('aria-pressed', String(currentTheme() === 'dark'));
+}
+const themeToggle = () => `<button type="button" class="theme-toggle" data-action="theme-toggle" aria-pressed="${currentTheme() === 'dark'}">${icon('moon')}<span class="theme-toggle-label">Dark mode</span><span class="theme-switch" aria-hidden="true"></span></button>`;
+if (savedTheme()) document.documentElement.dataset.theme = savedTheme();
+systemDark.addEventListener('change', syncThemeToggles);
 let storageWarning = loaded.warning;
 const validPages = new Set([...nav.map(([id]) => id), 'summary']);
 let page = validPages.has(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
@@ -90,7 +106,7 @@ function render() {
     <div class="prototype-tag">Prototype <span>·</span> Working title</div>
     <nav aria-label="Main navigation">${nav.map(([id, label]) => `<a href="#${id}" class="nav-link ${page === id ? 'active' : ''}" ${page === id ? 'aria-current="page"' : ''}>${icon(id)}<span>${label}</span>${id === 'courses' && state.entries.length ? `<span class="nav-count">${state.entries.length}</span>` : ''}</a>`).join('')}</nav>
     <div class="sidebar-bottom"><div class="local-dot"></div><strong>Just on this device</strong><p>No account. Your plan stays in this browser.</p><button data-action="setup" class="text-button">${state.setupComplete ? 'Edit my setup' : 'Set up my path'} ${icon('arrow')}</button></div>
-  </aside><div class="workspace"><header class="topbar"><div class="breadcrumb">Your path <span>/</span> ${nav.find(([id]) => id === page)?.[1] || 'Review summary'}</div><div class="top-actions"><span class="route-chip">High school → College</span><button class="button small secondary" data-action="summary">${icon('out')}<span>Review summary</span></button></div></header>
+  </aside><div class="workspace"><header class="topbar"><div class="breadcrumb">Your path <span>/</span> ${nav.find(([id]) => id === page)?.[1] || 'Review summary'}</div><div class="top-actions">${themeToggle()}<span class="route-chip">High school → College</span><button class="button small secondary" data-action="summary">${icon('out')}<span>Review summary</span></button></div></header>
   <main id="main">${storageWarning ? `<div class="notice warning" role="alert">${icon('info')}<div>${esc(storageWarning)} <button class="text-button" data-action="download-json">Export current plan</button>${loaded.warning ? '<button class="text-button" data-action="recover">Recover original saved copy</button>' : ''}<button class="text-button" data-action="restart-storage">Start fresh in this browser</button></div></div>` : ''}
     ${state.isDemo ? '<div class="demo-banner"><span><strong>Sample journey</strong> · Fictional course history. Explore freely.</span><button class="text-button" data-action="clear">Clear sample & start my own</button></div>' : ''}
     <button class="text-button journey-back" data-action="go-home">← Back to your next class</button>
@@ -106,7 +122,7 @@ function guideGo(step) {
 }
 function renderGuide() {
   const stages = [['classes', 'Your classes'], ['colleges', 'Your colleges'], ['next', 'Your next class']];
-  $('#app').innerHTML = `<div class="guide-shell"><header class="guide-header"><a class="brand" href="#home" aria-label="Matriculate home"><span class="brand-symbol" aria-hidden="true">M</span><span>Matriculate<span class="brand-sub">ONE CLASS. A CLEARER NEXT STEP.</span></span></a><details class="guide-tools-menu"><summary>Tools & details</summary><div><a href="#courses">All classes & editing</a><a href="#compare">Detailed credit comparison</a><a href="#plan">All class ideas</a><a href="#summary">Review & export</a><button data-action="setup">Full settings</button><button data-action="demo">Explore a sample</button><button data-action="clear">Clear this local plan</button></div></details></header><main id="main" class="guide-main">
+  $('#app').innerHTML = `<div class="guide-shell"><header class="guide-header"><a class="brand" href="#home" aria-label="Matriculate home"><span class="brand-symbol" aria-hidden="true">M</span><span>Matriculate<span class="brand-sub">ONE CLASS. A CLEARER NEXT STEP.</span></span></a><div class="guide-header-actions">${themeToggle()}<details class="guide-tools-menu"><summary>Tools<span class="guide-tools-more"> &amp; details</span></summary><div><a href="#courses">All classes & editing</a><a href="#compare">Detailed credit comparison</a><a href="#plan">All class ideas</a><a href="#summary">Review & export</a><button data-action="setup">Full settings</button><button data-action="demo">Explore a sample</button><button data-action="clear">Clear this local plan</button></div></details></div></header><main id="main" class="guide-main">
   ${storageWarning ? `<div class="notice warning" role="alert">${esc(storageWarning)} <button data-action="download-json">Export current plan</button>${loaded.warning ? '<button data-action="recover">Recover original saved copy</button>' : ''}<button data-action="restart-storage">Start fresh</button></div>` : ''}
   ${state.isDemo ? '<p class="guide-note">Sample plan · Fictional classes, just for exploring.</p>' : ''}
   ${state.guide.started ? `<nav class="guide-progress" aria-label="Planning steps"><ol>${stages.map(([id, label], i) => `<li><button data-action="guide-step" data-step="${id}" ${state.guide.step === id ? 'aria-current="step"' : ''}><span class="guide-step-number">${i + 1}</span><span class="guide-step-label">${label}</span></button></li>`).join('')}</ol></nav>${({ classes: guideClasses, colleges: guideColleges, next: guideNext }[state.guide.step])()}` : `<section class="guide-welcome"><div class="guide-welcome-copy"><p class="eyebrow">FOR STUDENTS AT ANY HIGH SCHOOL</p><h1 id="page-title" tabindex="-1">One class.<br>A clearer next step.</h1><p>Track your high-school and college classes. Add your school’s credit requirements. Make a plan for what comes next.</p><button class="button primary" data-action="guide-start">Find my next class ${icon('arrow')}</button><ul class="guide-promise" aria-label="What to expect"><li>${icon('check')}No account. No major required.</li><li>${icon('check')}Your plan stays in this browser.</li><li>${icon('check')}OUSD requirements and Peralta transfer research available.</li></ul></div><aside class="guide-outcomes" aria-labelledby="guide-outcomes-title"><h2 id="guide-outcomes-title">One class, three separate answers</h2><ol><li class="outcome-diploma"><strong>Diploma credit</strong><span>Classes your school records as passing and earned.</span></li><li class="outcome-uc"><strong>UC grade check</strong><span>A warning when a grade may fall below UC’s subject requirement.</span></li><li class="outcome-college"><strong>College transfer</strong><span>Exact-course evidence and local units. The receiving college decides.</span></li></ol></aside></section>`}
@@ -430,6 +446,13 @@ function summaryText() {
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-action]'); if (!button) return;
   const { action, id, course: courseId, target, entry } = button.dataset;
+  if (action === 'theme-toggle') {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(THEME_KEY, next); } catch { /* The choice still applies for this visit. */ }
+    syncThemeToggles();
+    return;
+  }
   if (['hs-allocation', 'guide-edit'].includes(action) && $('#course-workflow-form')) {
     const workflowForm = $('#course-workflow-form');
     try { saveWorkflowForm(workflowForm); } catch (error) { formError(workflowForm, error); return; }

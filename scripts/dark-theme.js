@@ -8,8 +8,13 @@
 // Each color keeps its hue and has its perceptual (OKLCH) lightness flipped, so paper
 // becomes a deep surface and ink becomes light text. Every color-related declaration is
 // mirrored, including ones without a color (border: 0), so the dark cascade resolves exactly
-// like the light one. The block is written between markers at the end of each file and is
-// only active on screens that prefer dark; print stays light.
+// like the light one. The block is written between markers at the end of each file, twice:
+//
+//   system dark, no choice saved   :root:not([data-theme="light"]) .card { ... }
+//   student chose dark             :root[data-theme="dark"] .card { ... }
+//
+// Both scopes add the same specificity to every rule, so relative order is unchanged and each
+// dark rule still outranks its own light rule. Print stays light.
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -140,15 +145,34 @@ function themeDecl([prop, value], overlay = false) {
   return `${prop}: ${value.replace(COLOR, match => darkColor(match, mode))}`;
 }
 
-function themeNodes(nodes) {
+const SCOPES = { system: ':not([data-theme="light"])', chosen: '[data-theme="dark"]' };
+
+/** Prefix each selector in a list with the root scope, merging into :root or html when present. */
+export function scopeSelector(selector, scope) {
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i <= selector.length; i++) {
+    const ch = selector[i];
+    if (ch === '(') depth++;
+    if (ch === ')') depth--;
+    if ((ch === ',' && depth === 0) || i === selector.length) { parts.push(selector.slice(start, i).trim()); start = i + 1; }
+  }
+  return parts.map(part => {
+    const root = part.match(/^(:root|html)(?![\w-])/);
+    return root ? `${root[1]}${scope}${part.slice(root[1].length)}` : `:root${scope} ${part}`;
+  }).join(',');
+}
+
+function themeNodes(nodes, scope) {
   const out = [];
   for (const node of nodes) {
     if (node.type === 'rule') {
       const overlay = node.selector.includes('::backdrop');
       const decls = node.decls.map(decl => themeDecl(decl, overlay)).filter(Boolean);
-      if (decls.length) out.push(`${node.selector}{${decls.join(';')}}`);
+      if (decls.length) out.push(`${scopeSelector(node.selector, scope)}{${decls.join(';')}}`);
     } else if (node.type === 'at' && !/\bprint\b/.test(node.prelude)) {
-      const inner = themeNodes(node.children);
+      const inner = themeNodes(node.children, scope);
       if (inner.length) out.push(`${node.prelude}{${inner.join('')}}`);
     }
   }
@@ -162,8 +186,10 @@ export function stripDarkBlock(css) {
 
 export function withDarkBlock(css) {
   const light = stripDarkBlock(css);
-  const rules = themeNodes(parse(light)).join('\n');
-  return `${light}\n${START}\n@media screen and (prefers-color-scheme: dark){\n${rules}\n}\n${END}\n`;
+  const nodes = parse(light);
+  const system = themeNodes(nodes, SCOPES.system).join('\n');
+  const chosen = themeNodes(nodes, SCOPES.chosen).join('\n');
+  return `${light}\n${START}\n@media screen and (prefers-color-scheme: dark){\n${system}\n}\n@media screen{\n${chosen}\n}\n${END}\n`;
 }
 
 const root = fileURLToPath(new URL('..', import.meta.url));
