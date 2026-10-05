@@ -127,3 +127,25 @@
 .course-workflow-form fieldset p:last-child { margin-bottom: 0; }
 @media(max-width:600px) { .guide-result-card > .course-workflow { padding-inline: 20px; } .course-workflow-next { flex-direction: column; gap: 3px; } .course-workflow-steps li > div { flex-wrap: wrap; gap: 0 10px; } }
 @media print { .course-workflow button { display: none; } }
+
+/* Credit hierarchy:
+   [Recorded earned] [Target] [REMAINING]   remaining leads; earned and target support it
+   [=========-------------------------]     a thicker, calmer bar
+   [For high school | For college]          fixed outcome colors from the shared tokens
+   Status chips pair color with shape (round = recorded, diamond = needs review) and text. */
+.hs-progress { box-shadow: var(--mx-shadow, none); }
+.hs-stats > div:nth-child(3) dd { color: var(--mx-diploma, var(--hs-green)); font-size: 38px; letter-spacing: -1px; }
+.hs-progress progress { height: 12px; border-radius: 999px; }
+.hs-progress progress::-webkit-progress-bar,
+.hs-progress progress::-webkit-progress-value,
+.hs-progress progress::-moz-progress-bar { border-radius: 999px; }
+.hs-status { align-items: center; gap: 6px; font-weight: 600; }
+.hs-status::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.hs-status.review::before { border-radius: 1px; transform: rotate(45deg); }
+.hs-connected { box-shadow: var(--mx-shadow, none); overflow: hidden; }
+.hs-outcome { border-top: 4px solid var(--outcome, transparent); }
+.hs-outcome:first-child { --outcome: var(--mx-diploma, var(--hs-green)); }
+.hs-outcome:last-child { --outcome: var(--mx-college, var(--hs-green)); }
+.hs-outcome h3 { color: var(--outcome, var(--hs-muted)); font-size: 13px; letter-spacing: .2px; }
+.grade-alert:not(.failure):not(.info) { border-left-color: var(--mx-uc, #947025); }
+@media (max-width: 599px) { .hs-stats > div:nth-child(3) dd { font-size: 30px; } }
