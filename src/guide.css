@@ -6,6 +6,18 @@
              Back                         Primary action
    Cream paper, sage panels, forest text. Static first, motion by preference. */
 
+/* Shared design tokens. One spacing scale, one shadow, and one fixed color per credit outcome
+   (diploma, UC A-G, college transfer) so each reads the same on every screen. */
+:root {
+  --mx-space-1: 4px; --mx-space-2: 8px; --mx-space-3: 12px; --mx-space-4: 16px;
+  --mx-space-5: 24px; --mx-space-6: 32px; --mx-space-7: 48px;
+  --mx-radius: 14px;
+  --mx-shadow: 0 1px 2px rgba(38, 61, 50, .06), 0 6px 18px rgba(38, 61, 50, .07);
+  --mx-diploma: #244f3e; --mx-diploma-bg: #e9efe2; --mx-diploma-line: #c5d5b9;
+  --mx-uc: #7a4f1a; --mx-uc-bg: #faf2e5; --mx-uc-line: #e0c79b;
+  --mx-college: #2b5670; --mx-college-bg: #e7f0f5; --mx-college-line: #b9d0dd;
+}
+
 /* The single-letter monogram does not use the former overlapping o/p spacing. */
 .brand-symbol { letter-spacing: 0; padding-right: 0; }
 
@@ -77,7 +89,9 @@
   letter-spacing: -1.1px;
 }
 .guide-header .brand-symbol { width: 34px; height: 37px; flex: none; }
-.guide-header .brand-sub { font-size: 7px; line-height: 1.5; letter-spacing: 1.1px; }
+.guide-header .brand-sub { font-size: 12px; line-height: 1.5; letter-spacing: .8px; }
+/* The tagline repeats the welcome heading, so narrow screens keep the header on one line. */
+@media (max-width: 479px) { .guide-header .brand-sub { display: none; } }
 .guide-tools { display: flex; align-items: center; gap: 12px; }
 .guide-tools .text-button { font-size: 14px; }
 .guide-tools-menu { position: relative; }
@@ -207,11 +221,34 @@
 .guide-welcome .guide-promise {
   max-width: 560px;
   margin: 26px 0 0;
-  padding-top: 22px;
+  padding: 22px 0 0;
+  list-style: none;
   border-top: 1px solid #d0dbc7;
   color: #4e644f;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.5;
+  display: grid;
+  gap: var(--mx-space-2);
+}
+.guide-welcome .guide-promise li { display: flex; align-items: flex-start; gap: var(--mx-space-2); }
+.guide-welcome .guide-promise .icon { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--mx-diploma); }
+
+.guide-outcomes { margin-top: var(--mx-space-6); padding-top: var(--mx-space-5); border-top: 1px solid #d0dbc7; }
+.guide-outcomes h2 { margin: 0 0 var(--mx-space-4); font-size: 18px; line-height: 1.3; letter-spacing: 0; }
+.guide-outcomes ol { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--mx-space-3); }
+.guide-outcomes li {
+  display: grid; gap: 2px; padding: var(--mx-space-3) var(--mx-space-4);
+  border: 1px solid var(--outcome-line); border-left: 5px solid var(--outcome);
+  border-radius: 10px; background: var(--guide-card); box-shadow: var(--mx-shadow);
+}
+.guide-outcomes li strong { color: var(--outcome); font-size: 15px; line-height: 1.4; }
+.guide-outcomes li span { color: var(--guide-muted); font-size: 14px; line-height: 1.5; }
+.guide-outcomes .outcome-diploma { --outcome: var(--mx-diploma); --outcome-line: var(--mx-diploma-line); }
+.guide-outcomes .outcome-uc { --outcome: var(--mx-uc); --outcome-line: var(--mx-uc-line); }
+.guide-outcomes .outcome-college { --outcome: var(--mx-college); --outcome-line: var(--mx-college-line); }
+@media (min-width: 900px) {
+  .guide-welcome { max-width: 940px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: var(--mx-space-7); align-items: center; }
+  .guide-outcomes { margin: 0; padding: 0; border: 0; }
 }
 
 .guide-shell .button {
@@ -452,7 +489,7 @@ div.guide-note, aside.guide-note { border: 1px solid var(--guide-line); border-r
   .guide-shell .source-links a::after { content: " (" attr(href) ")"; font-size: 10px; overflow-wrap: anywhere; }
 }
 
-.guide-footer{max-width:940px;margin:0 auto;padding:24px 30px;color:#5c6e61;font-size:12px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.guide-draft{padding:0;border:0;background:transparent}.guide-result-card>.badge{display:inline-block;margin:20px 20px 0}.guide-next-action{border:0;padding:0;margin:20px 0}.guide-choice-row{grid-template-columns:minmax(0,1fr)}.guide-class-card:has(input:checked){border-color:#718b61;background:#edf3e6}
+.guide-footer{max-width:940px;margin:0 auto;padding:24px 30px;color:#5c6e61;font-size:13px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.guide-draft{padding:0;border:0;background:transparent}.guide-result-card>.badge{display:inline-block;margin:20px 20px 0}.guide-next-action{border:0;padding:0;margin:20px 0}.guide-choice-row{grid-template-columns:minmax(0,1fr)}.guide-class-card:has(input:checked){border-color:#718b61;background:#edf3e6}
 
 #guide-course-form{font-size:16px;line-height:1.6}#guide-course-form label{font-size:15px}#guide-course-form input,#guide-course-form select{font-size:16px;min-height:48px}#guide-course-form .button{font-size:15px;min-height:48px}
 
@@ -515,3 +552,109 @@ div.guide-note, aside.guide-note { border: 1px solid var(--guide-line); border-r
     animation: none !important; transition: none !important; scroll-behavior: auto !important;
   }
 }
+
+/* Elevation: every primary card shares one shadow token, so depth reads the same on each screen. */
+.guide-panel, .guide-result-card, .guide-class-card, .guide-welcome { box-shadow: var(--mx-shadow); }
+
+/* Print: a counselor copy keeps the outcome colors and status shapes, drops screen depth and
+   the decorative welcome light, and keeps the prototype footer visible. */
+@media print {
+  .guide-panel, .guide-result-card, .guide-class-card, .guide-welcome, .hs-progress, .hs-connected, .guide-outcomes li { box-shadow: none; }
+  .guide-welcome::before { display: none; }
+  .hs-outcome, .hs-status, .grade-alert, .hs-progress progress, .guide-outcomes li { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hs-connected, .hs-record, .grade-alert { break-inside: avoid; }
+  .guide-footer { display: flex; padding: 12px 0 0; border-top: 1px solid #ccc; color: black; }
+}
+
+/* dark-theme:start (generated by scripts/dark-theme.js; do not edit by hand) */
+@media screen and (prefers-color-scheme: dark){
+:root{--mx-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.33);--mx-diploma: #7fa795;--mx-diploma-bg: #1c2017;--mx-diploma-line: #2d3824;--mx-uc: #ac8256;--mx-uc-bg: #1d1810;--mx-uc-line: #46340f;--mx-college: #7198b2;--mx-college-bg: #181e21;--mx-college-line: #283942}
+.guide-shell{--guide-paper: #161611;--guide-card: #0f0f0d;--guide-ink: #97afa2;--guide-muted: #748579;--guide-line: #262a21;--guide-green: #7fa795;--guide-sage: #1c2017;--guide-sage-strong: #262e1e;--guide-sand: #1d1810;--guide-focus: #a0713d;background: var(--guide-paper);color: var(--guide-ink);color-scheme: dark}
+.guide-shell :is(a, button, input, select, textarea, summary, [tabindex]):focus-visible{outline: 3px solid var(--guide-focus)}
+.guide-shell a{color: var(--guide-green)}
+.guide-shell :is(h1, h2, h3){color: var(--guide-ink)}
+.guide-shell .caption{color: var(--guide-muted)}
+.guide-shell .eyebrow{color: var(--guide-muted)}
+.guide-shell .lede{color: var(--guide-muted)}
+.guide-header{border-bottom: 1px solid var(--guide-line)}
+.guide-header .brand{color: var(--guide-green)}
+.guide-tools-menu > summary{border: 1px solid transparent;color: var(--guide-muted)}
+.guide-tools-menu > summary:hover, .guide-tools-menu[open] > summary{border-color: var(--guide-line);background: var(--guide-card)}
+.guide-tools-menu > :not(summary){border: 1px solid var(--guide-line);background: var(--guide-card);box-shadow: 0 12px 36px rgba(0, 0, 0, 0.332)}
+.guide-tools-menu :not(summary) > p{color: var(--guide-muted)}
+.guide-progress button{border: 1px solid transparent;background: transparent;color: var(--guide-muted)}
+.guide-progress button:hover:not(:disabled){background: #1b1d17}
+.guide-progress button[aria-current="step"]{background: var(--guide-sage);border-color: #293122;color: var(--guide-green)}
+.guide-progress button :is(.guide-step-number, span:first-child){border: 1px solid #31372b;color: var(--guide-muted);background: var(--guide-card)}
+.guide-progress button[aria-current="step"] :is(.guide-step-number, span:first-child){color: #0d0d0d;border-color: var(--guide-green);background: var(--guide-green)}
+.guide-progress button:disabled{color: #7b8777}
+.guide-heading > p:not(.eyebrow){color: var(--guide-muted)}
+.guide-welcome{border: 1px solid #24291e;background: var(--guide-sage)}
+.guide-welcome > p:not(.eyebrow){color: var(--guide-muted)}
+.guide-welcome .guide-promise{border-top: 1px solid #2a3123;color: #8ca18c}
+.guide-welcome .guide-promise .icon{color: var(--mx-diploma)}
+.guide-outcomes{border-top: 1px solid #2a3123}
+.guide-outcomes li{border: 1px solid var(--outcome-line);border-left: 5px solid var(--outcome);background: var(--guide-card);box-shadow: var(--mx-shadow)}
+.guide-outcomes li strong{color: var(--outcome)}
+.guide-outcomes li span{color: var(--guide-muted)}
+@media (min-width: 900px){.guide-outcomes{border: 0}}
+.guide-shell .button.primary{background: var(--guide-green);color: #0d0d0d;border-color: var(--guide-green)}
+.guide-shell .button.primary:hover{background: #90b4a2;border-color: #90b4a2}
+.guide-shell .button.secondary{color: var(--guide-green);background: var(--guide-card);border-color: #333e2b}
+.guide-shell .button.secondary:hover{background: #1a1d16;border-color: #4e6045}
+.guide-shell .button:disabled{background: #24271f;color: #879481;border-color: #282e22}
+.guide-shell .text-button{color: var(--guide-green)}
+.guide-shell .text-button.danger{color: #ca8875}
+.guide-shell .badge.green{color: #91ac86;background: #1b2015}
+.guide-shell .badge.sand{color: #b69668;background: #241c0e}
+.guide-panel{border: 1px solid var(--guide-line);background: var(--guide-card);box-shadow: 0 3px 14px rgba(0, 0, 0, 0.155)}
+.guide-shell :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea){border: 1px solid #364130;background: #0d0d0d;color: var(--guide-ink)}
+.guide-shell input::placeholder, .guide-shell textarea::placeholder{color: #838f7d}
+.guide-shell :is(input[type="checkbox"], input[type="radio"]){accent-color: var(--guide-green)}
+.guide-search > label, .guide-search-row label, .guide-choice-row label, .guide-candidate-select > label{color: var(--guide-ink)}
+.guide-class-card{border: 1px solid var(--guide-line);background: var(--guide-card)}
+.guide-class-copy p:last-child{color: var(--guide-muted)}
+.guide-class-card:has([aria-pressed="true"]){border-color: #516144;background: #161913}
+.guide-chips button{border: 1px solid #32392c;background: var(--guide-card);color: var(--guide-ink)}
+.guide-chips button:hover{background: #1a1d16}
+.guide-chips button[aria-pressed="true"], .guide-chips button.selected{color: var(--guide-green);background: #1c2316;border-color: #5c704c}
+.guide-actions{border-top: 1px solid var(--guide-line)}
+.guide-empty p{color: var(--guide-muted)}
+.guide-result-card{border: 1px solid #2b3223;background: var(--guide-card)}
+.guide-course-top p{color: var(--guide-muted)}
+.guide-course-top .course-icon{background: var(--guide-sage);color: var(--guide-green)}
+.guide-facts{border-top: 1px solid var(--guide-line)}
+.guide-facts > *{background: #171a13}
+.guide-facts > :nth-child(2){border-top: 1px solid #2d281d;background: var(--guide-sand)}
+.guide-facts li{color: #91a493}
+.guide-facts > :nth-child(2) li{color: #a89980}
+.guide-result-actions{border-top: 1px solid var(--guide-line)}
+.guide-result-actions > p{color: var(--guide-muted)}
+.guide-draft{border-left: 3px solid #556944;background: #181b14}
+.guide-draft .guide-class-card{background: var(--guide-card)}
+.guide-note{color: var(--guide-muted)}
+div.guide-note, aside.guide-note{border: 1px solid var(--guide-line);background: #191b15}
+.guide-details{border: 1px solid var(--guide-line);background: var(--guide-card)}
+.guide-details > summary{color: var(--guide-green)}
+.guide-details[open] > summary{border-bottom: 1px solid var(--guide-line)}
+.guide-question{background: var(--guide-sand);border: 1px solid #332a1b}
+.guide-question p{color: #a39883}
+.guide-mini-totals > *{border: 1px solid var(--guide-line);background: var(--guide-card)}
+.guide-mini-totals :is(span, dt){color: var(--guide-muted)}
+.guide-mini-totals p{color: var(--guide-muted)}
+.guide-shell .footer{color: var(--guide-muted)}
+@media (min-width: 600px){.guide-facts > :nth-child(2){border-top: 0;border-left: 1px solid #2d281d}}
+.guide-footer{color: #86978a}
+.guide-draft{border: 0;background: transparent}
+.guide-next-action{border: 0}
+.guide-class-card:has(input:checked){border-color: #5e7550;background: #191c14}
+.guide-tools-menu{border: 0}
+.guide-credit-details{border-top: 1px solid var(--guide-line);border-bottom: 0}
+.guide-credit-details>summary{color: var(--guide-green)}
+.guide-credit-content>section{border-top: 1px solid var(--guide-line)}
+@media screen{.guide-welcome::before{background: radial-gradient(ellipse at 15% 10%, #0f0f0d 0, rgba(15, 15, 13, 0) 62%),
+      radial-gradient(ellipse at 90% 85%, #29341c 0, rgba(41, 52, 28, 0) 58%)}}
+@media screen and (prefers-reduced-motion: no-preference){.guide-class-card:has(> button:focus-visible){border-color: #506142}@media (hover: hover) and (pointer: fine){.guide-class-card:has(> button:not(:disabled):hover){border-color: #506142}}}
+.guide-panel, .guide-result-card, .guide-class-card, .guide-welcome{box-shadow: var(--mx-shadow)}
+}
+/* dark-theme:end */

@@ -14,7 +14,8 @@
     "build": "node scripts/build.js",
     "preview": "npm run build && WRANGLER_SEND_METRICS=false wrangler dev --env dev --local --ip 127.0.0.1 --port 8787",
     "cf:dry-run": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --env dev --dry-run --outdir .wrangler/dry-run",
-    "cf:deploy:dev": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --env dev"
+    "cf:deploy:dev": "npm run build && WRANGLER_SEND_METRICS=false wrangler deploy --env dev",
+    "theme:dark": "node scripts/dark-theme.js"
   },
   "devDependencies": {
     "wrangler": "4.147.0"
