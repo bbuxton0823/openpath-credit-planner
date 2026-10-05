@@ -2,11 +2,13 @@
 
 Matriculate was formerly named OpenPath. The current public development beta includes the audit fixes in application commit `9fb379c4811f92cc26e9e95b53970a6710dcd79d`. Repository/Worker URLs, storage identifiers, historical filenames and recorded evidence remain unchanged; build ownership now includes generated-directory identity. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; earlier private-repository observations below are historical.
 
-## Theme toggle branch, October 4, 2026
+## Theme toggle release, October 4, 2026
 
 Branch `feat/theme-toggle` adds a visible **Dark mode** switch to the guided header and to the detailed-pages header. The system color preference applies until a student uses the switch. The choice is stored under its own browser key, `matriculate.theme`, separate from the saved plan, so plans and exports are unchanged. The switch keeps the name "Dark mode" and reports its state with `aria-pressed`. Below 480 pixels the visible label becomes screen-reader text, the switch and moon icon stay visible, and the tools menu shows "Tools" while keeping "Tools & details" as its accessible name.
 
 The generated dark rules are now written twice: once for a dark system preference unless the student chose light (`:root:not([data-theme="light"])`), and once whenever the student chose dark (`:root[data-theme="dark"]`). Both scopes add the same specificity to every rule, so the dark cascade still mirrors the light one. Against `main`, stylesheets grow 41,127 raw bytes and 2,726 gzip bytes, almost all from the repeated scope; `app.js` grows 1,617 raw bytes.
+
+[PR #4](https://github.com/bbuxton0823/openpath-credit-planner/pull/4) was merged as `482bdb06db012883c87cb961b3c82ec3f951737d` and deployed from that commit as version `642d6794-c3e0-4508-92d3-247ec2eb1103`, deployment `e591272e-da6b-42f8-9888-c426c2c4aa00`, at 100% traffic. The stable beta, `matriculate.app` and `www.matriculate.app` each then served 21 of 21 assets matching the build, 21 successful empty HEAD responses, 9 of 9 excluded-path 404s and all seven configured headers.
 
 Checks: `npm test` 193 passed, `npm run check` 42 files, dark-theme sync check, `git diff --check` and a 22-file dry run with zero bindings. Browser checks on a separate local port with a fictional plan covered light and dark system preferences with no choice, a light choice and a dark choice, reload persistence, focus staying on the switch, an unchanged saved plan, and header layout at 1100, 390 and 320 pixels with no horizontal overflow.
 
