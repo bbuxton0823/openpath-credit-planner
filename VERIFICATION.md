@@ -18,7 +18,7 @@ The workflow used existing local GitHub keyring access and Wrangler OAuth. No ne
 | `git diff --check` | Passed |
 | `npm run cf:dry-run` | Passed, 22 allowlisted files and zero bindings |
 
-These results are from the completed local Claude run. This documentation closeout does not change application source or repeat the automated suite; it adds release-specific HTTP and browser verification.
+These results are from the completed local Claude run. The documentation closeout leaves application source unchanged and adds release-specific HTTP and browser verification. The later Claude finalization also repeated the 187-test suite, the 40-file syntax check and diff checking.
 
 The fixes add plain-D receiving-college grade review without changing explicit high-school awards; round college-unit totals; fold typed line breaks in high-school text summaries; show one course-named counselor button per card; verify the generated directory's identity before replacing it; align local response headers with `public/_headers`; and resolve syntax-check paths from the repository. The three changed browser assets matched local source at deployment readback.
 
@@ -40,7 +40,7 @@ The college card contained exactly one counselor button named for its course. En
 
 Actual hosted downloads were read back:
 
-- `verification/beta-closeout-counselor.txt`: 6,679 bytes, SHA-256 `0491d2d712b8838bc2b3bb9438106caf041f18af4b33e67f1da31174a49f7314`. The text contained exactly one physical `HS earned:` summary line, correctly reporting zero school-verified, five student-reported and five not-earned credits. A fictional note containing a forged newline was folded into the note as `Fictional smoke-test note / HS earned:230...`, without creating a separate summary line.
+- `verification/beta-closeout-counselor.txt`: 6,679 bytes, SHA-256 `0491d2d712b8838bc2b3bb9438106caf041f18af4b33e67f1da31174a49f7314`. The text contained exactly one physical `HS earned:` summary line, correctly reporting zero school-verified, five student-reported and five not-earned credits. A fictional note containing a forged newline was folded into the note as `Fictional smoke-test note / HS earned: 230...`, without creating a separate summary line.
 - `verification/beta-closeout-plan.json`: 2,485 bytes, SHA-256 `cc46df94bac9c551a7beebc216705e10fdde0e3205dd8522fcc3f6e8a998e2ed`. The original newline remained in its proper note field, and the saved records remained intact.
 
 Reduced-motion checks sampled 18 rendered elements: no animations, zero animation/transition durations and automatic scroll behavior. Keyboard interaction remained usable. The emulation override was cleared afterward; the system still reported a reduced-motion preference. No viewport override was used. The test-owned version tab was closed, and the stable-beta plan and port 4317/8787 instances were untouched.
