@@ -1,8 +1,23 @@
 # Cloudflare development beta hosting
 
-Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The hosted site still serves the earlier OpenPath release, version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`. The latest grade alerts, rename and CSS motion treatment are local/source changes and have not been deployed. Existing repository/Worker URLs, package identity, browser storage and build markers are unchanged.
+Matriculate, formerly OpenPath, is a prototype with an authorized public development beta at [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). It serves source commit `2ce8faa5d3a143d656928d44b785751fb3832b27`, including the latest grade alerts, rename and CSS motion treatment, as version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0`. Existing repository/Worker URLs, package identity, browser storage and build markers are unchanged. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was read without changing it.
 
-The earlier static application was deployed on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
+The static application was updated on October 4, 2026 using existing Cloudflare authentication. No account creation, plan change, database, secret, custom domain, or student-data upload was performed. This is a beta, not a production-readiness claim.
+
+## Current Matriculate deployment
+
+- Source: clean commit `2ce8faa5d3a143d656928d44b785751fb3832b27`.
+- Worker/environment: `openpath-credit-planner-dev`, `dev`.
+- Version: `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0`.
+- Release URL: [6a086714-openpath-credit-planner-dev.buxtonbycha.workers.dev](https://6a086714-openpath-credit-planner-dev.buxtonbycha.workers.dev).
+- Deployment: `14415063-b42a-4264-9f0f-10ffd2b7ff39`, 100% of the development Worker's traffic.
+- Created: `2026-10-05T00:18:06Z`, October 4, 2026 at 5:18 PM Pacific.
+
+Authenticated version and deployment reads confirmed these identifiers. The authorized deployment uploaded five changed assets from the same 22-file allowlist, with no bindings or backend. The original port 4317 server was left running; the port 8787 preview was restarted after the build. Browser storage was not uploaded.
+
+HTTP checks compared all 21 served assets against source and build bytes on the stable beta, release URL and restarted preview. All 63 GETs matched, all 63 HEADs were successful and empty, and all 54 excluded-path requests returned 404, including `AUDIT.md`. Disk inspection confirmed 22 allowlisted files. The stable beta and preview matched all seven configured headers. The release URL matched six headers but returned `X-Robots-Tag: noindex` instead of the configured `noindex, nofollow`; this known difference remains recorded rather than counted as a strict header pass.
+
+Hosted browser checks covered grade alerts, award preservation, exact-course evidence, reload, read-only questions, keyboard focus, all three guide stages, phone-width layout, and normal/reduced motion. The stable beta was refreshed read-only and preserved its existing fictional plan. No warning or error entries were captured on either hosted tab. Hosted downloads were not repeated; the 14 local export assertions apply to unchanged source. [VERIFICATION.md](./VERIFICATION.md) records the precise scope and limits. Raw results remain in ignored `verification/matriculate-release-http.json` and `verification/matriculate-release-browser.json`. Historical checks below remain evidence for their recorded releases only.
 
 ## Choice and tradeoff
 
@@ -100,7 +115,7 @@ rtk proxy curl -sSI http://127.0.0.1:8787/PRD.md
 
 Expected: app response 200 with the documented security headers; excluded document response 404.
 
-## Verification of the expanded beta
+## Historical verification of the expanded beta
 
 The final general-school and custom-course integration passed:
 
@@ -146,7 +161,7 @@ e99c2ef27aeebef6a8b4cc257b56e740b8868c77227868f9758ec5312ecb272d  src/guide.css
 
 A later source edit requires another build and runtime check. See `VERIFICATION.md` for browser journey evidence. The hosting checks alone do not verify that interactive workflow.
 
-## Authorized development deployment
+## Historical expanded-beta deployment and update procedure
 
 The existing OAuth session exposed one Cloudflare account, ID `968bbe4ecaf64a0b5bede5b53e06aedd`, with workers.dev subdomain `buxtonbycha`. An authenticated read confirmed the exact target Worker did not exist before the initial deployment. The subsequent update replaced only this dedicated development Worker; no unrelated Worker was changed. `wrangler whoami` and the account/subdomain reads succeeded without a new login.
 
@@ -162,7 +177,7 @@ rtk npm run cf:deploy:dev
 
 The script rebuilds the exact allowlist, then invokes `WRANGLER_SEND_METRICS=false wrangler deploy --env dev`. It publishes 21 static browser assets plus header configuration without uploading documents, verification exports, or saved student records.
 
-Deployment result:
+Historical expanded-beta deployment result:
 
 - Worker: `openpath-credit-planner-dev`.
 - Public beta: [openpath-credit-planner-dev.buxtonbycha.workers.dev](https://openpath-credit-planner-dev.buxtonbycha.workers.dev).
@@ -173,7 +188,7 @@ Deployment result:
 
 The initial development deployment was followed by the general-school and custom-course update documented above. The final integrated results are 159 passing tests, 38 syntax checks, and a 22-file allowlist. They are saved in `verification/general-beta-test-run.txt`.
 
-The actual HTTPS beta was reopened programmatically after deployment. All 21 public GET responses exactly matched current source and `dist/` bytes. All 21 HEAD requests returned 200 with empty bodies. Every asset response matched all seven configured security/cache headers. All 17 excluded/private paths returned 404. The version URL returned the exact HTML bytes and rejected `/PRD.md` with 404. `wrangler versions list --env dev --json` and `wrangler deployments list --env dev --json` confirmed the version and its 100% deployment. Raw results are in `verification/general-cloudflare-dev-check.json`.
+The actual HTTPS beta was reopened programmatically after that deployment. All 21 public GET responses exactly matched the then-current source and `dist/` bytes. All 21 HEAD requests returned 200 with empty bodies. Every asset response matched all seven configured security/cache headers. All 17 excluded/private paths returned 404. The version URL returned the exact HTML bytes and rejected `/PRD.md` with 404. `wrangler versions list --env dev --json` and `wrangler deployments list --env dev --json` confirmed the version and its 100% deployment. Raw results are in `verification/general-cloudflare-dev-check.json`.
 
 Hosted browser journey validation is recorded separately in `VERIFICATION.md`. HTTP correctness does not alone establish the browser workflow, official school decisions, or production readiness. The original localhost4317 process and browser storage were preserved.
 

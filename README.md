@@ -10,7 +10,7 @@ The rename preserves repository and Worker URLs, the npm package name `openpath-
 
 ## Development beta
 
-The [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) still serves the earlier OpenPath release, version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`. The Matriculate rename, latest grade alerts and CSS motion treatment are local/source changes and have not been deployed. The [GitHub source repository](https://github.com/bbuxton0823/openpath-credit-planner) is private; the development site is public. Historical browser results in [VERIFICATION.md](./VERIFICATION.md) do not verify the newer source changes.
+The [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) serves Matriculate, including the latest grade alerts and CSS motion treatment. Source commit `2ce8faa5d3a143d656928d44b785751fb3832b27` was deployed on October 4, 2026 at 5:18 PM Pacific as Cloudflare version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0`. The [GitHub source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public, as is the development site. Hosted HTTP and browser checks passed within the scope and limits recorded in [VERIFICATION.md](./VERIFICATION.md).
 
 Use fictional coursework to try the prototype. From **Tools & details**, choose **Explore a sample**, then explore a college class, a credit explanation, and the four course checks. Or start empty and follow **Your classes → Your colleges → Your next class**. Loading a sample can replace the current local plan, so export anything you want to keep first.
 
@@ -156,7 +156,7 @@ The optional Jev judgment seam is disabled and contains no network transport or 
 
 ## Check the code
 
-Start an independent review with [AUDIT.md](./AUDIT.md), which records reproduction commands, the source/hosted version boundary, credit and privacy invariants, current checks, and unresolved readiness work.
+Start an independent review with [AUDIT.md](./AUDIT.md), which records reproduction commands, the checked release, credit and privacy invariants, current checks, and unresolved readiness work.
 
 From the project directory:
 
@@ -167,7 +167,7 @@ npm run check
 
 Tests use Node's built-in test runner. The check command runs JavaScript syntax checks, not a type checker or a full accessibility audit.
 
-Public browser checks covered empty start, general-school targets, manual quarter/unknown-unit courses, unknown transfer evidence, grade guards, counselor-question save/edit/reload, the OUSD roster and alternative-school limits, school-change resets, and narrow-screen forms. The checked deployment is `6a2f7a54-8481-41d2-9ce6-784b59ee285c`. Actual JSON and text downloads also passed 21 content assertions covering the general-school record, separate unit systems, saved questions and the absence of OUSD rules. See [VERIFICATION.md](./VERIFICATION.md) for exact automated, browser and downloaded-file results and remaining limits.
+The unchanged deployed source passed 180 automated tests and 39 JavaScript syntax checks before deployment. Hosted browser checks covered grade alerts without changed award totals, course evidence, reload, read-only counselor questions, keyboard focus, phone-width layouts and reduced motion. All 21 served assets matched source and build bytes on the stable beta, release URL and local preview. The release URL returned the known `X-Robots-Tag: noindex` difference; the stable beta and preview matched all seven configured headers. Actual local JSON/text downloads passed 14 content assertions before deployment; hosted downloads were not repeated. [VERIFICATION.md](./VERIFICATION.md) records exact results and limits for each release.
 
 The proposed five-student usability study in [PRD.md](./PRD.md) has not been run, and no participants have been recruited for this build. Browser checks are not evidence of student comprehension or verified school policy applicability.
 

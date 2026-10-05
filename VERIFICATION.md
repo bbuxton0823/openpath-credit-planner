@@ -1,8 +1,36 @@
 # Matriculate verification
 
-Matriculate was formerly named OpenPath. The rename, latest grade alerts and CSS motion treatment are local/source changes, not a new deployment. The hosted site remains the earlier OpenPath release described below. Repository/Worker URLs, storage/build identifiers, historical filenames and recorded evidence remain unchanged. Prior hosted checks do not verify the newer source changes.
+Matriculate was formerly named OpenPath. The current public development beta includes the rename, latest grade alerts and CSS motion treatment. Repository/Worker URLs, storage/build identifiers, historical filenames and recorded evidence remain unchanged. The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; earlier private-repository observations below are historical.
 
-## Matriculate, grade alerts and motion, October 4, 2026
+## Matriculate hosted release, October 4, 2026
+
+The separately authorized deployment used clean source commit `2ce8faa5d3a143d656928d44b785751fb3832b27`. Worker `openpath-credit-planner-dev`, environment `dev`, serves version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at the [stable beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev) and [release version URL](https://6a086714-openpath-credit-planner-dev.buxtonbycha.workers.dev). Deployment `14415063-b42a-4264-9f0f-10ffd2b7ff39` received 100% traffic. Authenticated version and deployment reads confirmed the identifiers and creation time `2026-10-05T00:18:06Z`, October 4 at 5:18 PM Pacific.
+
+The build retained the 22-file allowlist and uploaded five changed static assets. No binding, backend, account, database or student-data upload was introduced. The original port 4317 server was left alone, and the port 8787 preview was restarted after the build. Repository visibility was read as public and preserved.
+
+### Hosted HTTP and build checks
+
+All 21 served assets matched source and `dist/` bytes on the stable beta, release URL and restarted port 8787 preview: 63 exact GET bodies and 63 successful empty HEAD bodies. All 54 excluded-path requests returned 404, 18 per origin including `AUDIT.md`. The disk manifest contained exactly 22 allowlisted files. Stable beta and preview responses matched all seven configured headers. The release URL matched six but returned `X-Robots-Tag: noindex` instead of the configured `noindex, nofollow`; this known difference is not a strict seven-header pass.
+
+The deployed source is unchanged from the predeployment 180 passing tests and 39 JavaScript syntax checks in the local preparation below. Those checks were not rerun for this deployment-only pass. The build and deployment were rechecked. An authenticated traffic read after all browser checks again confirmed deployment `14415063-b42a-4264-9f0f-10ffd2b7ff39` serving version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at 100%. No application code changed during hosted verification, and no new tests were added.
+
+### Hosted browser checks
+
+An isolated fresh plan on the release URL established these results:
+
+- An explicitly earned D award counted 3 high-school credits. Without selected colleges, its UC grade note remained conditional and quiet. A completed F retained its entered 5-credit attempt in history and earned zero. An explicitly earned B+ counted 3 credits without an alert, giving 6 earned credits in total.
+- Howard alone removed the UC-specific warning while retaining 6 earned credits. Adding Berkeley showed the prominent UC warning and correct official source without changing the total.
+- A Laney `ENGL C1000` D record from Fall 2025 kept 4 local semester units. Its absent school-credit amount still needed confirmation. Howard remained unverified; UC's published 2025-26 unit evidence remained separate from the A-G grade warning. Reload retained the records, grades, destinations and totals.
+- The welcome light ran once for 0.78 seconds in normal motion, and the dialog used `guide-dialog-in`. Grade alerts stayed static. The contextual counselor question was read-only, the close target measured 44 by 44px, focus started inside the dialog, Tab reached the textarea with a visible outline, and Escape returned focus to the invoking button.
+- At a 390 by 844 viewport, content width was 390px with no document overflow and the dialog was 356px wide. Reduced motion produced no heading/dialog animation and zero-duration control transitions. All three guide stages remained navigable. Media and viewport overrides were restored after checking.
+
+The stable beta was refreshed read-only. Its title was Matriculate, and its existing fictional general-school plan remained at 20 earned credits toward a 240-credit target, with 220 remaining. Its 4 quarter units and 5-credit pending linked allocation were preserved. Neither hosted tab produced captured application warnings or errors. The original port 4317 server was untouched.
+
+Hosted export downloads were not repeated. The 14 actual local JSON/text download assertions below apply to the same unchanged application source, but are not a new hosted-download result. No official school decision, physical-phone performance, older-browser fallback, Safari/Firefox compatibility, complete accessibility or student comprehension was verified.
+
+Ignored evidence: `verification/matriculate-release-http.json`, `verification/matriculate-release-browser.json`, `verification/matriculate-release-deployment.json`, `verification/matriculate-release-welcome.png`, `verification/matriculate-release-grade-mobile.png`, and `verification/matriculate-stable-beta.png`. These captures and fictional browser plans are excluded from Git and the public build.
+
+## Matriculate local release preparation, October 4, 2026
 
 This source handoff adds visible grade guidance without changing academic accounting or receiving-college rules. D-range records retain explicit diploma awards under the existing conditions. UC selections receive a separate A-G grade warning; no selection gets a conditional note, and HBCU-only selections omit it. Missing school confirmation stays separate. F/NP and recorded non-passing attempts retain their entered amount and expose zero earned diploma credit. The alert opens a labeled, read-only counselor question without persistence or transmission.
 
@@ -22,7 +50,7 @@ The Matriculate name appears in both app layouts, browser title, favicon, dialog
 | Final motion follow-up | Changed `guide.css` matched source/build/both local servers; full 22-file disk manifest matched source; `AUDIT.md` remained excluded |
 | Actual JSON/text downloads | 14 assertions passed for brand, schema, grades, retained amounts, awards, destinations and separate unit totals |
 
-The preview was stopped before packaging, then restarted at `http://127.0.0.1:8787`. Stable hosted `index.html`, `app.js`, `high-school-view.js`, `high-school.css` and `guide.css` still matched the preceding `5ba38dc` source bytes rather than this update. Its title remained OpenPath. No new deployment command was run.
+During local release preparation, the preview was stopped before packaging, then restarted at `http://127.0.0.1:8787`. At that point, stable hosted `index.html`, `app.js`, `high-school-view.js`, `high-school.css` and `guide.css` still matched the preceding `5ba38dc` source bytes rather than this update. Its title remained OpenPath. No deployment command was run during that preparation pass; the subsequent authorized deployment is recorded above.
 
 ### Browser and rendering checks
 
@@ -52,7 +80,7 @@ Release preparation checks:
 - `rtk git diff --check`: no whitespace errors.
 - `rtk npm run cf:dry-run`: built 22 allowlisted files and passed for the existing dev environment without runtime bindings.
 
-The correction was committed and pushed as `ee1d40234a2ab4c888acb7b735413c4680e70df3` on `main` in the existing private GitHub repository. `rtk npm run cf:deploy:dev` rebuilt the same allowlist and uploaded only the changed `src/high-school.js` asset. The existing Worker `openpath-credit-planner-dev`, environment `dev`, now serves version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`, deployment `b536ff75-74d1-4936-afaf-7cbe1281fb6c`, at 100 percent. Authenticated version/deployment reads confirmed these identifiers.
+The correction was committed and pushed as `ee1d40234a2ab4c888acb7b735413c4680e70df3` on `main` in the then-private GitHub repository. `rtk npm run cf:deploy:dev` rebuilt the same allowlist and uploaded only the changed `src/high-school.js` asset. The existing Worker `openpath-credit-planner-dev`, environment `dev`, then served version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`, deployment `b536ff75-74d1-4936-afaf-7cbe1281fb6c`, at 100 percent. Authenticated version/deployment reads confirmed these identifiers.
 
 Hosted verification used the stable beta and the isolated [release version URL](https://6b7fa0ea-openpath-credit-planner-dev.buxtonbycha.workers.dev). The version URL started with an empty plan, so the fictional form tests did not change the existing stable-beta plan or either localhost plan. All 21 served assets matched source and build bytes at both hosted URLs and the restarted local preview. Each origin also passed 21 empty successful HEAD responses and 17 excluded-path 404 checks. Stable beta and local preview matched all seven configured headers. The version URL returned `X-Robots-Tag: noindex` instead of `noindex, nofollow`; its other six headers matched. The strict version-header mismatch remains recorded in `verification/bplus-release-http.json`.
 
@@ -72,7 +100,7 @@ Browser evidence is in ignored `verification/bplus-release-browser.json` and `ve
 
 The expanded prototype is deployed at https://openpath-credit-planner-dev.buxtonbycha.workers.dev. It supports students at any high school through a student-recorded total graduation-credit target and manual college courses. OUSD requirements and Peralta transfer research remain limited, dated coverage. No official award, graduation eligibility, admission result or enrollment is claimed.
 
-Cloudflare Worker `openpath-credit-planner-dev`, environment `dev`, account `968bbe4ecaf64a0b5bede5b53e06aedd` (Buxtonbycha@gmail.com's Account). Checked version `6a2f7a54-8481-41d2-9ce6-784b59ee285c`, deployment `f242af2b-b21d-4887-8a0e-d7295aa9ee45`, 100 percent allocation. The private source repository is https://github.com/bbuxton0823/openpath-credit-planner. Public browser assets can be read regardless of source-repository privacy.
+Cloudflare Worker `openpath-credit-planner-dev`, environment `dev`, account `968bbe4ecaf64a0b5bede5b53e06aedd` (Buxtonbycha@gmail.com's Account). Checked version `6a2f7a54-8481-41d2-9ce6-784b59ee285c`, deployment `f242af2b-b21d-4887-8a0e-d7295aa9ee45`, 100 percent allocation. The source repository, https://github.com/bbuxton0823/openpath-credit-planner, was private at that time. Public browser assets can be read regardless of source-repository privacy.
 
 | Final command or check | Result |
 | --- | --- |

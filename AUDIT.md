@@ -2,7 +2,7 @@
 
 **Prepared October 4, 2026.** Matriculate, formerly OpenPath, is a student credit-planning prototype. This source handoff is for an independent audit, which has not yet been completed. It is not an official school evaluation or a production-readiness claim.
 
-The current grade alerts, Matriculate rename and CSS motion treatment are source-only updates. The latest recorded hosted release still uses the OpenPath name and remains code commit `ee1d40234a2ab4c888acb7b735413c4680e70df3`, Cloudflare version `6b7fa0ea-8e8d-4a9e-bde0-5024eb801d4f`, at the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). These newer changes have not been deployed. Repository/Worker URLs, storage/schema, package identity, build markers and historical evidence filenames are retained. Prior release evidence is in [VERIFICATION.md](./VERIFICATION.md); do not treat it as verification of newer source.
+The current grade alerts, Matriculate rename and CSS motion treatment were deployed from code commit `2ce8faa5d3a143d656928d44b785751fb3832b27` as Cloudflare version `6a086714-b2a9-4aea-b43b-8fc65dd7b4d0` at the [public development beta](https://openpath-credit-planner-dev.buxtonbycha.workers.dev). The [source repository](https://github.com/bbuxton0823/openpath-credit-planner) is currently public; its visibility was preserved. Repository/Worker URLs, storage/schema, package identity, build markers and historical evidence filenames are retained. [VERIFICATION.md](./VERIFICATION.md) records completed hosted checks and distinguishes them from local preparation and prior-release evidence.
 
 ## Reproduce locally
 
@@ -20,7 +20,7 @@ npm start
 
 `npm start` serves source assets at `http://localhost:4317`. Check an occupied port before starting another process. RTK users can prefix these commands with `rtk`.
 
-For Cloudflare's loopback runtime, use `npm run preview` and open `http://127.0.0.1:8787`. **Stop an existing 8787 preview before any build or packaging dry run.** Replacing `dist/` during a running preview previously caused HTTP 500 responses. Restart with `npm run preview`, which builds before starting. Do not stop an unrelated existing 4317 server. `npm run cf:dry-run` checks packaging without publication; it also rebuilds. No deployment is part of this audit handoff.
+For Cloudflare's loopback runtime, use `npm run preview` and open `http://127.0.0.1:8787`. **Stop an existing 8787 preview before any build or packaging dry run.** Replacing `dist/` during a running preview previously caused HTTP 500 responses. Restart with `npm run preview`, which builds before starting. Do not stop an unrelated existing 4317 server. `npm run cf:dry-run` checks packaging without publication; it also rebuilds. The audit reproduction commands do not deploy.
 
 ## Verification supplied with this handoff
 
@@ -30,6 +30,8 @@ For Cloudflare's loopback runtime, use `npm run preview` and open `http://127.0.
 - `rtk npm run cf:dry-run`: passed, 22 allowlisted public files, no bindings and no publication. The restarted local preview is at `http://127.0.0.1:8787`.
 - Source and preview HTTP checks: 21 matching GET bodies, 21 successful empty HEAD bodies and 18 excluded-path 404s per origin. Preview matched all seven configured headers; the Node source server matched its four configured headers. The motion stylesheet and final disk manifest were rechecked after the last rebuild. Audit documentation and exports are not public assets.
 - Actual fictional Matriculate JSON and text downloads passed 14 content assertions. Browser checks covered D awards, missing award confirmation, UC/HBCU/undecided choices, F attempts, read-only questions, Escape/focus return, reload, normal and reduced motion, and phone-width overflow. The original localhost record was inspected without editing it; the existing preview retained 23 recorded credits and 207 remaining.
+- Current hosted release: 63 exact-source GET bodies, 63 successful empty HEAD bodies and 54 excluded-path 404s across stable beta, release URL and preview. Stable/preview matched seven headers; the release URL matched six plus the known robots-header difference described below. The 22-file disk manifest matched the allowlist.
+- Hosted browser checks retained explicit D and B+ awards totaling 6 credits, preserved a failed 5-credit attempt with zero earned, separated 4 local semester units from school and university evidence, and preserved records on reload. UC/HBCU/undecided warnings, read-only questions, keyboard focus, normal/reduced motion and all three guide stages worked at desktop and phone widths. A read-only stable-beta refresh preserved 20/240/220 high-school totals, 4 quarter units and a 5-credit pending linked allocation. No warnings or errors were captured. Hosted downloads were not repeated; the 14 local assertions apply to unchanged source.
 
 Detailed scope and limitations are in [VERIFICATION.md](./VERIFICATION.md). These are implementation checks and internal reviews, not the requested independent external audit.
 
@@ -61,7 +63,7 @@ In the Codex in-app browser on the desktop host, a 390 by 844 viewport (375px co
 
 The hosted app consists of static assets, with no application API, authored Worker handler, database or school-system connection. Plans use origin-specific browser local storage. There is no authentication, application-level encryption, cloud backup, synchronization or import interface. Local JSON/text exports and print are available; clearing browser data can erase the plan. Use fictional records during audit.
 
-`scripts/build.js` allowlists exactly **22 files**: 21 served HTML/JavaScript/CSS assets plus `_headers` configuration. It excludes documentation, tests, dependencies, verification exports and student plans, rejects symlinks, and only replaces marked generated output. [HOSTING.md](./HOSTING.md) lists the paths. A private GitHub repository does not make deployed browser assets private.
+`scripts/build.js` allowlists exactly **22 files**: 21 served HTML/JavaScript/CSS assets plus `_headers` configuration. It excludes documentation, tests, dependencies, verification exports and student plans, rejects symlinks, and only replaces marked generated output. [HOSTING.md](./HOSTING.md) lists the paths. The repository and deployed browser assets are public. Local verification captures and saved student plans are excluded from Git and the public build.
 
 `public/_headers` configures CSP, content-type sniffing protection, frame denial, no-referrer, restricted browser permissions, no-store and noindex/nofollow. CSP blocks app network connections and form submission. These controls are not access control or an independent security audit. The recorded version URL returns `X-Robots-Tag: noindex` instead of the configured `noindex, nofollow`; the stable beta matched all seven headers. Excluded paths must return genuine 404 responses.
 
